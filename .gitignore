@@ -1,0 +1,8 @@
+#AWS DB 환경 변수
+.env
+
+#PHP 라이브러리
+/vendor/
+
+#로그 및 캐시
+*.log
