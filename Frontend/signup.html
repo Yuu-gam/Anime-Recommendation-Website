@@ -93,11 +93,11 @@
                     <div class="login__form">
                         <h3>회원가입</h3>
                         <!-- [BACKEND] action 경로를 실제 회원가입 처리 PHP 파일명(예: signup_process.php)으로 연결 -->
-                        <form id="signup-form" action="signup_process.php" method="POST">
+                        <form id="signup-form" action="../php/signupSQL.php" method="POST">
                             <!-- 1. 아이디 + 중복 확인 -->
                             <div class="d-flex justify-content-between align-items-center" style="max-width: 370px; margin-bottom: 6px;">
                                 <div class="input__item" style="width: calc(100% - 115px); margin-bottom: 0;">
-                                    <input type="text" id="user_id" name="user_id" placeholder="아이디" required>
+                                    <input type="text" id="login_id" name="login_id" placeholder="아이디" required>
                                     <span class="icon_id"></span>
                                 </div>
                                 <button type="button" id="check-id-btn" class="site-btn" style="width: 105px; height: 50px; padding: 0; font-size: 13px;">중복 확인</button>
@@ -120,7 +120,7 @@
 
                             <!-- 4. 비밀번호 확인 (2회 입력) -->
                             <div class="input__item" style="margin-bottom: 6px;">
-                                <input type="password" id="password_confirm" name="password_confirm" placeholder="비밀번호 확인" required>
+                                <input type="password" id="password_check" name="password_check" placeholder="비밀번호 확인" required>
                                 <span class="icon_lock"></span>
                             </div>
                             <small id="pw-match-msg" style="display: block; max-width: 370px; margin-bottom: 20px; color: #b7b7b7;">
