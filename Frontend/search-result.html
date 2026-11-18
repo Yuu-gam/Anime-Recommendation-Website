@@ -259,6 +259,7 @@
                                 <li><a href="./index.html">홈</a></li>
                                 <li><a href="./categories.html">카테고리(장르)</a></li>
                                 <li class="active"><a href="./search-result.html">검색</a></li>
+                                <li><a href="./favorites.html">즐겨찾기</a></li>
                                 <li>
                                     <a href="./login.html">로그인 / 마이페이지 <span class="arrow_carrot-down"></span></a>
                                     <ul class="dropdown">
@@ -324,7 +325,6 @@
                                         <div class="filter-group">
                                             <label class="filter-group-label">장르 / 태그 <span>(복수 선택 가능)</span></label>
                                             <div class="filter-chip-list">
-                                                <!-- [BACKEND] DB에 장르 테이블이 별도로 있다면 아래 label 목록을 DB에서 foreach로 출력 가능 -->
                                                 <label class="filter-chip"><input type="checkbox" name="genres[]" value="Action"><span>액션 (Action)</span></label>
                                                 <label class="filter-chip"><input type="checkbox" name="genres[]" value="Adventure"><span>모험 (Adventure)</span></label>
                                                 <label class="filter-chip"><input type="checkbox" name="genres[]" value="Fantasy"><span>판타지 (Fantasy)</span></label>
@@ -408,94 +408,94 @@
                                     <div class="product__item__pic set-bg" data-setbg="img/trending/trend-1.jpg">
                                         <div class="ep">18 / 18</div>
                                         <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                                        <div class="view"><i class="fa fa-eye"></i> 9,141</div>
                                     </div>
                                     <div class="product__item__text">
                                         <ul>
-                                            <li>Active</li>
-                                            <li>Movie</li>
+                                            <li>완결</li>
+                                            <li>TV</li>
                                         </ul>
-                                        <h5><a href="./anime-details.html">Fate / Stay Night: Unlimited Blade Works</a></h5>
+                                        <h5><a href="./anime-details.html?id=1">Fate / Stay Night: Unlimited Blade Works</a></h5>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-6 col-sm-6">
                                 <div class="product__item">
                                     <div class="product__item__pic set-bg" data-setbg="img/recent/recent-2.jpg">
-                                        <div class="ep">18 / 18</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                                        <div class="ep">극장판</div>
+                                        <div class="comment"><i class="fa fa-comments"></i> 14</div>
+                                        <div class="view"><i class="fa fa-eye"></i> 11,020</div>
                                     </div>
                                     <div class="product__item__text">
                                         <ul>
-                                            <li>Active</li>
-                                            <li>Movie</li>
+                                            <li>완결</li>
+                                            <li>극장판</li>
                                         </ul>
-                                        <h5><a href="./anime-details.html">Fate/stay night Movie: Heaven's Feel - II. Lost</a></h5>
+                                        <h5><a href="./anime-details.html?id=8">Fate/stay night [Heaven's Feel] II. lost butterfly</a></h5>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-6 col-sm-6">
                                 <div class="product__item">
                                     <div class="product__item__pic set-bg" data-setbg="img/recent/recent-4.jpg">
-                                        <div class="ep">18 / 18</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                                        <div class="ep">12 / 12</div>
+                                        <div class="comment"><i class="fa fa-comments"></i> 21</div>
+                                        <div class="view"><i class="fa fa-eye"></i> 17,450</div>
                                     </div>
                                     <div class="product__item__text">
                                         <ul>
-                                            <li>Active</li>
-                                            <li>Movie</li>
+                                            <li>완결</li>
+                                            <li>TV</li>
                                         </ul>
-                                        <h5><a href="./anime-details.html">Fate/Zero 2nd Season</a></h5>
+                                        <h5><a href="./anime-details.html?id=10">Fate/Zero 2nd Season</a></h5>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-6 col-sm-6">
                                 <div class="product__item">
                                     <div class="product__item__pic set-bg" data-setbg="img/sidebar/tv-4.jpg">
-                                        <div class="ep">18 / ?</div>
+                                        <div class="ep">극장판</div>
                                         <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                                        <div class="view"><i class="fa fa-eye"></i> 18,410</div>
                                     </div>
                                     <div class="product__item__text">
                                         <ul>
-                                            <li>Active</li>
-                                            <li>Movie</li>
+                                            <li>완결</li>
+                                            <li>극장판</li>
                                         </ul>
-                                        <h5><a href="./anime-details.html">Fate/stay night: Heaven's Feel I. presage flower</a></h5>
+                                        <h5><a href="./anime-details.html?id=18">Fate/stay night [Heaven's Feel] I. presage flower</a></h5>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-6 col-sm-6">
                                 <div class="product__item">
                                     <div class="product__item__pic set-bg" data-setbg="img/sidebar/tv-5.jpg">
-                                        <div class="ep">18 / ?</div>
+                                        <div class="ep">25 / 25</div>
                                         <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                                        <div class="view"><i class="fa fa-eye"></i> 21,900</div>
                                     </div>
                                     <div class="product__item__text">
                                         <ul>
-                                            <li>Active</li>
-                                            <li>Movie</li>
+                                            <li>완결</li>
+                                            <li>TV</li>
                                         </ul>
-                                        <h5><a href="./anime-details.html">Fate stay night unlimited blade works</a></h5>
+                                        <h5><a href="./anime-details.html?id=19">Fate/stay night: Unlimited Blade Works 2nd</a></h5>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-6 col-sm-6">
                                 <div class="product__item">
                                     <div class="product__item__pic set-bg" data-setbg="img/live/live-5.jpg">
-                                        <div class="ep">18 / 18</div>
+                                        <div class="ep">극장판</div>
                                         <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                                        <div class="view"><i class="fa fa-eye"></i> 9,141</div>
                                     </div>
                                     <div class="product__item__text">
                                         <ul>
-                                            <li>Active</li>
-                                            <li>Movie</li>
+                                            <li>완결</li>
+                                            <li>극장판</li>
                                         </ul>
-                                        <h5><a href="./anime-details.html">Fate/stay night: Heaven's Feel Series</a></h5>
+                                        <h5><a href="./anime-details.html?id=23">Fate/stay night: Heaven's Feel III. spring song</a></h5>
                                     </div>
                                 </div>
                             </div>
@@ -515,34 +515,34 @@
                     <div class="product__sidebar">
                         <div class="product__sidebar__view">
                             <div class="section-title">
-                                <h5>Top Views</h5>
+                                <h5>조회수 TOP</h5>
                             </div>
                             <ul class="filter__controls">
-                                <li class="active" data-filter="*">Day</li>
-                                <li data-filter=".week">Week</li>
-                                <li data-filter=".month">Month</li>
-                                <li data-filter=".years">Years</li>
+                                <li class="active" data-filter="*">전체</li>
+                                <li data-filter=".week">주간</li>
+                                <li data-filter=".month">월간</li>
+                                <li data-filter=".years">연간</li>
                             </ul>
                             <div class="filter__gallery">
                                 <div class="product__sidebar__view__item set-bg mix day years" data-setbg="img/sidebar/tv-1.jpg">
-                                    <div class="ep">18 / ?</div>
-                                    <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                    <h5><a href="./anime-details.html">Boruto: Naruto next generations</a></h5>
+                                    <div class="ep">방영중</div>
+                                    <div class="view"><i class="fa fa-eye"></i> 9,141</div>
+                                    <h5><a href="./anime-details.html?id=16">보루토: 나루토 넥스트 제너레이션즈</a></h5>
                                 </div>
                                 <div class="product__sidebar__view__item set-bg mix month week" data-setbg="img/sidebar/tv-2.jpg">
-                                    <div class="ep">18 / ?</div>
-                                    <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                    <h5><a href="./anime-details.html">The Seven Deadly Sins: Wrath of the Gods</a></h5>
+                                    <div class="ep">24 / 24</div>
+                                    <div class="view"><i class="fa fa-eye"></i> 12,300</div>
+                                    <h5><a href="./anime-details.html?id=1">일곱 개의 대죄: 신들의 역린</a></h5>
                                 </div>
                                 <div class="product__sidebar__view__item set-bg mix week years" data-setbg="img/sidebar/tv-3.jpg">
-                                    <div class="ep">18 / ?</div>
-                                    <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                    <h5><a href="./anime-details.html">Sword art online alicization war of underworld</a></h5>
+                                    <div class="ep">23 / 23</div>
+                                    <div class="view"><i class="fa fa-eye"></i> 15,780</div>
+                                    <h5><a href="./anime-details.html?id=17">소드 아트 온라인 앨리시제이션 WoU</a></h5>
                                 </div>
                                 <div class="product__sidebar__view__item set-bg mix years month" data-setbg="img/sidebar/tv-4.jpg">
-                                    <div class="ep">18 / ?</div>
-                                    <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                    <h5><a href="./anime-details.html">Fate/stay night: Heaven's Feel I. presage flower</a></h5>
+                                    <div class="ep">극장판</div>
+                                    <div class="view"><i class="fa fa-eye"></i> 18,410</div>
+                                    <h5><a href="./anime-details.html?id=18">Fate/stay night [Heaven's Feel] I</a></h5>
                                 </div>
                             </div>
                         </div>
@@ -570,6 +570,7 @@
                             <li><a href="./index.html">홈</a></li>
                             <li><a href="./categories.html">카테고리(장르)</a></li>
                             <li><a href="./search-result.html">검색</a></li>
+                            <li><a href="./favorites.html">즐겨찾기</a></li>
                             <li><a href="./login.html">로그인 / 마이페이지</a></li>
                         </ul>
                     </div>
@@ -621,7 +622,6 @@
                     const filterBox = document.getElementById('advanced-filter-box');
                     const toggleBtn = document.getElementById('toggle-filter-btn');
 
-                    // 1. 제목 검색어 복원
                     if (keyword.trim() !== '') {
                         keywordInput.value = keyword;
                         searchTermEl.textContent = keyword;
@@ -629,7 +629,6 @@
                         searchTermEl.textContent = '전체';
                     }
 
-                    // 2. 상세 필터 체크박스 및 입력값 복원
                     let hasAdvancedFilter = false;
                     const summaryBadges = [];
 
@@ -664,7 +663,6 @@
                         summaryBadges.push('방영연도: ' + (yearFrom || '처음') + ' ~ ' + (yearTo || '현재'));
                     }
 
-                    // 3. 상세 조건이 하나라도 적용되어 있으면 필터 패널 자동 펼침 및 요약 뱃지 표시
                     if (hasAdvancedFilter) {
                         filterBox.classList.add('show');
                         toggleBtn.setAttribute('aria-expanded', 'true');
@@ -673,7 +671,6 @@
                             .join('');
                     }
 
-                    // 4. 조건 초기화 버튼 동작
                     document.getElementById('reset-filter-btn').addEventListener('click', function () {
                         keywordInput.value = '';
                         document.querySelectorAll('#advanced-filter-box input[type="checkbox"]').forEach(cb => cb.checked = false);

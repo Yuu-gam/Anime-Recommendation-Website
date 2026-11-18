@@ -11,8 +11,7 @@
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap"
-          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Css Styles -->
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
@@ -49,6 +48,7 @@
                                 <li><a href="./index.html">홈</a></li>
                                 <li class="active"><a href="./categories.html">카테고리(장르)</a></li>
                                 <li><a href="./search-result.html">검색</a></li>
+                                <li><a href="./favorites.html">즐겨찾기</a></li>
                                 <li>
                                     <a href="./login.html">로그인 / 마이페이지 <span class="arrow_carrot-down"></span></a>
                                     <ul class="dropdown">
@@ -139,7 +139,8 @@
                             </div>
                             <div class="anime__details__btn">
                                 <!-- [BACKEND] 로그인 세션 확인 후 즐겨찾기 추가/해제 처리 (favorite_process.php 등) -->
-                                <a href="#" id="favorite-toggle-btn" class="follow-btn"><i class="fa fa-heart-o"></i> 즐겨찾기 추가</a>
+                                <a href="#" id="favorite-toggle-btn" class="follow-btn"><i class="fa fa-star-o"></i> 즐겨찾기 추가</a>
+                                <a href="./favorites.html" class="watch-btn"><span>즐겨찾기 목록</span> <i class="fa fa-angle-right"></i></a>
                             </div>
                         </div>
                     </div>
@@ -206,22 +207,22 @@
                         <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-1.jpg">
                             <div class="ep">18 / ?</div>
                             <div class="view"><i class="fa fa-eye"></i> 9,141</div>
-                            <h5><a href="./anime-details.html?id=1">Boruto: Naruto next generations</a></h5>
+                            <h5><a href="./anime-details.html?id=16">Boruto: Naruto next generations</a></h5>
                         </div>
                         <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-2.jpg">
                             <div class="ep">24 / 24</div>
                             <div class="view"><i class="fa fa-eye"></i> 8,420</div>
-                            <h5><a href="./anime-details.html?id=2">The Seven Deadly Sins: Wrath of the Gods</a></h5>
+                            <h5><a href="./anime-details.html?id=1">The Seven Deadly Sins: Wrath of the Gods</a></h5>
                         </div>
                         <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-3.jpg">
                             <div class="ep">23 / 23</div>
                             <div class="view"><i class="fa fa-eye"></i> 11,302</div>
-                            <h5><a href="./anime-details.html?id=3">Sword Art Online: Alicization</a></h5>
+                            <h5><a href="./anime-details.html?id=17">Sword Art Online: Alicization</a></h5>
                         </div>
                         <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-4.jpg">
                             <div class="ep">극장판</div>
                             <div class="view"><i class="fa fa-eye"></i> 15,890</div>
-                            <h5><a href="./anime-details.html?id=4">Fate/stay night: Heaven's Feel I</a></h5>
+                            <h5><a href="./anime-details.html?id=18">Fate/stay night: Heaven's Feel I</a></h5>
                         </div>
                     </div>
                 </div>
@@ -247,6 +248,7 @@
                             <li><a href="./index.html">홈</a></li>
                             <li><a href="./categories.html">카테고리(장르)</a></li>
                             <li><a href="./search-result.html">검색</a></li>
+                            <li><a href="./favorites.html">즐겨찾기</a></li>
                             <li><a href="./login.html">로그인 / 마이페이지</a></li>
                         </ul>
                     </div>
@@ -281,16 +283,16 @@
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
 
-    <!-- 즐겨찾기 버튼 상태 토글 (프론트 테스트용) -->
+    <!-- 별(★) 버튼 즐겨찾기 토글 스크립트 -->
     <script>
                 document.getElementById('favorite-toggle-btn').addEventListener('click', function (e) {
                     e.preventDefault();
                     const isAdded = this.classList.toggle('added');
                     if (isAdded) {
-                        this.innerHTML = '<i class="fa fa-heart"></i> 즐겨찾기 완료';
+                        this.innerHTML = '<i class="fa fa-star" style="color: #f3da35;"></i> 즐겨찾기 완료';
                         this.style.background = '#c92a2b';
                     } else {
-                        this.innerHTML = '<i class="fa fa-heart-o"></i> 즐겨찾기 추가';
+                        this.innerHTML = '<i class="fa fa-star-o"></i> 즐겨찾기 추가';
                         this.style.background = '';
                     }
                 });
