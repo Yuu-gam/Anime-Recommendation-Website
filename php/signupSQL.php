@@ -5,6 +5,7 @@
 	$login_id = $_POST['login_id'];
 	$password = $_POST['password'];
 	$password_check = $_POST['password_check'];
+	$user_age = $_POST['user_age'];
 
 	//log, DB 연결
 	require_once(__DIR__ . '/log.php');
@@ -17,6 +18,7 @@
 	$login_id = mysqli_real_escape_string($conn, $login_id);
 	$password = mysqli_real_escape_string($conn, $password);
 	$password_check = mysqli_real_escape_string($conn, $password_check);
+	$user_age = (int)$user_age;
 
 	if($password == "" || $password_check == "") //비밀번호 공란일 경우
 	{
