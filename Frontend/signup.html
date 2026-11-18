@@ -11,8 +11,7 @@
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap"
-          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Css Styles -->
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
@@ -49,6 +48,7 @@
                                 <li><a href="./index.html">홈</a></li>
                                 <li><a href="./categories.html">카테고리(장르)</a></li>
                                 <li><a href="./search-result.html">검색</a></li>
+                                <li><a href="./favorites.html">즐겨찾기</a></li>
                                 <li class="active">
                                     <a href="./login.html">로그인 / 마이페이지 <span class="arrow_carrot-down"></span></a>
                                     <ul class="dropdown">
@@ -154,6 +154,7 @@
                             <li><a href="./index.html">홈</a></li>
                             <li><a href="./categories.html">카테고리(장르)</a></li>
                             <li><a href="./search-result.html">검색</a></li>
+                            <li><a href="./favorites.html">즐겨찾기</a></li>
                             <li><a href="./login.html">로그인 / 마이페이지</a></li>
                         </ul>
                     </div>
@@ -201,14 +202,12 @@
 
                     let isIdChecked = false;
 
-                    // 아이디 수정 시 중복 확인 상태 초기화
                     userIdInput.addEventListener('input', function () {
                         isIdChecked = false;
                         idCheckMsg.textContent = '* 아이디 입력 후 중복 확인을 눌러주세요.';
                         idCheckMsg.style.color = '#b7b7b7';
                     });
 
-                    // 중복 확인 버튼 클릭
                     checkIdBtn.addEventListener('click', function () {
                         const userId = userIdInput.value.trim();
                         if (!userId) {
@@ -235,13 +234,11 @@
                         return;
                         */
 
-                        // 프론트엔드 단독 테스트용 임시 통과 처리
                         isIdChecked = true;
                         idCheckMsg.textContent = '사용 가능한 아이디입니다. (DB 연동 전 임시 확인)';
                         idCheckMsg.style.color = '#4caf50';
                     });
 
-                    // 비밀번호 2회 입력 실시간 일치 확인
                     function validatePasswordMatch() {
                         const pw = pwInput.value;
                         const pwConfirm = pwConfirmInput.value;
@@ -266,7 +263,6 @@
                     pwInput.addEventListener('input', validatePasswordMatch);
                     pwConfirmInput.addEventListener('input', validatePasswordMatch);
 
-                    // 제출 전 최종 검증
                     signupForm.addEventListener('submit', function (e) {
                         if (!isIdChecked) {
                             e.preventDefault();
