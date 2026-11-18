@@ -24,7 +24,7 @@
 			mysqli_set_charset($conn, "utf8mb4");
 
 			$escaped_id = mysqli_real_escape_string($conn, $login_id);
-			$query = "SELECT * FROM users WHERE login_id = '" . $escaped_id . "';";
+			$query = "SELECT * FROM Users WHERE login_id = '" . $escaped_id . "';";
 			$resultSet = mysqli_query($conn, $query);
 
 			if (mysqli_num_rows($resultSet) > 0) {

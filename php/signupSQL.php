@@ -2,10 +2,13 @@
 <?php
 	session_start();
 
+	ini_set('display_errors', 1);
+	error_reporting(E_ALL);
+
 	$login_id = $_POST['login_id'];
 	$password = $_POST['password'];
 	$password_check = $_POST['password_check'];
-	$user_age = $_POST['user_age'];
+	$user_age = $_POST['age'];
 
 	//log, DB 연결
 	require_once(__DIR__ . '/log.php');
@@ -34,8 +37,8 @@
 	}
 	else //회원가입
 	{
-		$query = "INSERT INTO users(login_id, password)
-			VALUES ('".$login_id."', '".$password."');";
+		$query = "INSERT INTO Users(login_id, password, age)
+			VALUES ('".$login_id."', '".$password."', '".$user_age."');";
 
 		$result = mysqli_query($conn, $query);
 
@@ -44,16 +47,16 @@
 			writeLog("회원가입 - user(" .$login_id. ")회원가입 성공");
 			echo "<script>
 				alert('회원가입이 완료되었습니다.');
-				location.href='./login.php';
-			</script>";
+				location.href='/animeInfo/login.php'; 
+			</script>"; //경로 파일 이름 따라서 꼭! 바꾸기 (animeInfo부분)
 		}
 		else
 		{
 			writeLog("회원가입 - 비밀번호 입력 이후 회원가입 실패");
 			echo "<script>
 				alert('회원가입에 실패했습니다. 아이디를 확인해주세요.');
-				location.href='./signup.php';
-			</script>";
+				location.href='/animeInfo/signup.php';
+			</script>"; //경로 파일 이름 따라서 꼭! 바꾸기 (animeInfo부분)
 		}
 	}
 

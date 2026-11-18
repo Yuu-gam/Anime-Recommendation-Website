@@ -6,3 +6,6 @@
 
 #로그 및 캐시
 *.log
+
+#DB credentials
+php/SQLconstants.php

@@ -15,7 +15,7 @@
 
 	mysqli_set_charset($conn, "utf8mb4");
 
-	$query = "SELECT * FROM users WHERE login_id = '".$login_id."';";
+	$query = "SELECT * FROM Users WHERE login_id = '".$login_id."';";
 	$resultSet = mysqli_query($conn, $query);
 
 	if(mysqli_num_rows($resultSet) > 0) //해당 아이디가 DB에 존재할 때
