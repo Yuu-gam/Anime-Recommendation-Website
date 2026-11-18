@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
@@ -7,12 +7,12 @@
     <meta name="keywords" content="Anime, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Anime | Template</title>
+    <title>Anime | 회원가입</title>
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap"
-    rel="stylesheet">
+          rel="stylesheet">
 
     <!-- Css Styles -->
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
@@ -38,7 +38,7 @@
                 <div class="col-lg-2">
                     <div class="header__logo">
                         <a href="./index.html">
-                            <img src="img/logo.png" alt="">
+                            <img src="img/logo.png" alt="Logo">
                         </a>
                     </div>
                 </div>
@@ -46,27 +46,24 @@
                     <div class="header__nav">
                         <nav class="header__menu mobile-menu">
                             <ul>
-                                <li><a href="./index.html">Homepage</a></li>
-                                <li><a href="./categories.html">Categories <span class="arrow_carrot-down"></span></a>
+                                <li><a href="./index.html">홈</a></li>
+                                <li><a href="./categories.html">카테고리(장르)</a></li>
+                                <li><a href="./search-result.html">검색</a></li>
+                                <li class="active">
+                                    <a href="./login.html">로그인 / 마이페이지 <span class="arrow_carrot-down"></span></a>
                                     <ul class="dropdown">
-                                        <li><a href="./categories.html">Categories</a></li>
-                                        <li><a href="./anime-details.html">Anime Details</a></li>
-                                        <li><a href="./anime-watching.html">Anime Watching</a></li>
-                                        <li><a href="./blog-details.html">Blog Details</a></li>
-                                        <li><a href="./signup.html">Sign Up</a></li>
-                                        <li><a href="./login.html">Login</a></li>
+                                        <li><a href="./login.html">로그인</a></li>
+                                        <li><a href="./signup.html">회원가입</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="./blog.html">Our Blog</a></li>
-                                <li><a href="#">Contacts</a></li>
                             </ul>
                         </nav>
                     </div>
                 </div>
                 <div class="col-lg-2">
                     <div class="header__right">
-                        <a href="#" class="search-switch"><span class="icon_search"></span></a>
-                        <a href="./login.html"><span class="icon_profile"></span></a>
+                        <a href="#" class="search-switch" title="빠른 검색"><span class="icon_search"></span></a>
+                        <a href="./login.html" title="로그인 / 마이페이지"><span class="icon_profile"></span></a>
                     </div>
                 </div>
             </div>
@@ -74,63 +71,71 @@
         </div>
     </header>
     <!-- Header End -->
-
     <!-- Normal Breadcrumb Begin -->
     <section class="normal-breadcrumb set-bg" data-setbg="img/normal-breadcrumb.jpg">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <div class="normal__breadcrumb__text">
-                        <h2>Sign Up</h2>
-                        <p>Welcome to the official Anime blog.</p>
+                        <h2>회원가입</h2>
+                        <p>간단한 정보 입력으로 계정을 생성할 수 있습니다.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
     <!-- Normal Breadcrumb End -->
-
     <!-- Signup Section Begin -->
     <section class="signup spad">
         <div class="container">
-            <div class="row">
+            <div class="row d-flex justify-content-center">
                 <div class="col-lg-6">
                     <div class="login__form">
-                        <h3>Sign Up</h3>
-                        <form action="#">
-                            <div class="input__item">
-                                <input type="text" placeholder="Email address">
-                                <span class="icon_mail"></span>
+                        <h3>회원가입</h3>
+                        <!-- [BACKEND] action 경로를 실제 회원가입 처리 PHP 파일명(예: signup_process.php)으로 연결 -->
+                        <form id="signup-form" action="signup_process.php" method="POST">
+                            <!-- 1. 아이디 + 중복 확인 -->
+                            <div class="d-flex justify-content-between align-items-center" style="max-width: 370px; margin-bottom: 6px;">
+                                <div class="input__item" style="width: calc(100% - 115px); margin-bottom: 0;">
+                                    <input type="text" id="user_id" name="user_id" placeholder="아이디" required>
+                                    <span class="icon_id"></span>
+                                </div>
+                                <button type="button" id="check-id-btn" class="site-btn" style="width: 105px; height: 50px; padding: 0; font-size: 13px;">중복 확인</button>
                             </div>
+                            <small id="id-check-msg" style="display: block; max-width: 370px; margin-bottom: 16px; color: #b7b7b7;">
+                                * 아이디 입력 후 중복 확인을 눌러주세요.
+                            </small>
+
+                            <!-- 2. 이름(닉네임) -->
                             <div class="input__item">
-                                <input type="text" placeholder="Your Name">
+                                <input type="text" id="user_name" name="user_name" placeholder="이름 (닉네임)" required>
                                 <span class="icon_profile"></span>
                             </div>
+
+                            <!-- 3. 비밀번호 -->
                             <div class="input__item">
-                                <input type="text" placeholder="Password">
+                                <input type="password" id="password" name="password" placeholder="비밀번호" required>
                                 <span class="icon_lock"></span>
                             </div>
-                            <button type="submit" class="site-btn">Login Now</button>
+
+                            <!-- 4. 비밀번호 확인 (2회 입력) -->
+                            <div class="input__item" style="margin-bottom: 6px;">
+                                <input type="password" id="password_confirm" name="password_confirm" placeholder="비밀번호 확인" required>
+                                <span class="icon_lock"></span>
+                            </div>
+                            <small id="pw-match-msg" style="display: block; max-width: 370px; margin-bottom: 20px; color: #b7b7b7;">
+                                * 비밀번호를 한 번 더 입력하세요.
+                            </small>
+
+                            <button type="submit" class="site-btn">회원가입 완료</button>
                         </form>
-                        <h5>Already have an account? <a href="#">Log In!</a></h5>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="login__social__links">
-                        <h3>Login With:</h3>
-                        <ul>
-                            <li><a href="#" class="facebook"><i class="fa fa-facebook"></i> Sign in With Facebook</a>
-                            </li>
-                            <li><a href="#" class="google"><i class="fa fa-google"></i> Sign in With Google</a></li>
-                            <li><a href="#" class="twitter"><i class="fa fa-twitter"></i> Sign in With Twitter</a></li>
-                        </ul>
+                        <h5>이미 계정이 있으신가요? <a href="./login.html">로그인!</a></h5>
                     </div>
                 </div>
             </div>
         </div>
     </section>
     <!-- Signup Section End -->
-
     <!-- Footer Section Begin -->
     <footer class="footer">
         <div class="page-up">
@@ -140,41 +145,39 @@
             <div class="row">
                 <div class="col-lg-3">
                     <div class="footer__logo">
-                        <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                        <a href="./index.html"><img src="img/logo.png" alt="Logo"></a>
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="footer__nav">
                         <ul>
-                            <li class="active"><a href="./index.html">Homepage</a></li>
-                            <li><a href="./categories.html">Categories</a></li>
-                            <li><a href="./blog.html">Our Blog</a></li>
-                            <li><a href="#">Contacts</a></li>
+                            <li><a href="./index.html">홈</a></li>
+                            <li><a href="./categories.html">카테고리(장르)</a></li>
+                            <li><a href="./search-result.html">검색</a></li>
+                            <li><a href="./login.html">로그인 / 마이페이지</a></li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-3">
                     <p>
-                        Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://ahmedmaher-portfolio.vercel.app/" target="_blank">Ahmed Maher</a>
-                      </p>
-
-                  </div>
-              </div>
-          </div>
-      </footer>
-      <!-- Footer Section End -->
-
-      <!-- Search model Begin -->
-      <div class="search-model">
+                        Copyright &copy;
+                        <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://ahmedmaher-portfolio.vercel.app/" target="_blank">Ahmed Maher</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer Section End -->
+    <!-- Search model Begin -->
+    <div class="search-model">
         <div class="h-100 d-flex align-items-center justify-content-center">
             <div class="search-close-switch"><i class="icon_close"></i></div>
-            <form class="search-model-form">
-                <input type="text" id="search-input" placeholder="Search here.....">
+            <form action="search-result.html" method="GET" class="search-model-form">
+                <input type="text" name="keyword" id="search-input" placeholder="작품 제목을 입력하세요..." autocomplete="off">
             </form>
         </div>
     </div>
     <!-- Search model end -->
-
     <!-- Js Plugins -->
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -184,6 +187,102 @@
     <script src="js/jquery.slicknav.js"></script>
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
+
+    <!-- 회원가입 아이디 중복 확인 및 비밀번호 일치 검증 스크립트 -->
+    <script>
+                (function () {
+                    const userIdInput = document.getElementById('user_id');
+                    const checkIdBtn = document.getElementById('check-id-btn');
+                    const idCheckMsg = document.getElementById('id-check-msg');
+                    const pwInput = document.getElementById('password');
+                    const pwConfirmInput = document.getElementById('password_confirm');
+                    const pwMatchMsg = document.getElementById('pw-match-msg');
+                    const signupForm = document.getElementById('signup-form');
+
+                    let isIdChecked = false;
+
+                    // 아이디 수정 시 중복 확인 상태 초기화
+                    userIdInput.addEventListener('input', function () {
+                        isIdChecked = false;
+                        idCheckMsg.textContent = '* 아이디 입력 후 중복 확인을 눌러주세요.';
+                        idCheckMsg.style.color = '#b7b7b7';
+                    });
+
+                    // 중복 확인 버튼 클릭
+                    checkIdBtn.addEventListener('click', function () {
+                        const userId = userIdInput.value.trim();
+                        if (!userId) {
+                            alert('아이디를 먼저 입력해주세요.');
+                            userIdInput.focus();
+                            return;
+                        }
+
+                        // [BACKEND] 실제 PHP 중복 확인 API(예: check_id.php?user_id=...) 연동 시 아래 fetch 주석을 해제하여 사용
+                        /*
+                        fetch('check_id.php?user_id=' + encodeURIComponent(userId))
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.available) {
+                                    isIdChecked = true;
+                                    idCheckMsg.textContent = '사용 가능한 아이디입니다.';
+                                    idCheckMsg.style.color = '#4caf50';
+                                } else {
+                                    isIdChecked = false;
+                                    idCheckMsg.textContent = '이미 사용 중인 아이디입니다.';
+                                    idCheckMsg.style.color = '#e53637';
+                                }
+                            });
+                        return;
+                        */
+
+                        // 프론트엔드 단독 테스트용 임시 통과 처리
+                        isIdChecked = true;
+                        idCheckMsg.textContent = '사용 가능한 아이디입니다. (DB 연동 전 임시 확인)';
+                        idCheckMsg.style.color = '#4caf50';
+                    });
+
+                    // 비밀번호 2회 입력 실시간 일치 확인
+                    function validatePasswordMatch() {
+                        const pw = pwInput.value;
+                        const pwConfirm = pwConfirmInput.value;
+
+                        if (!pwConfirm) {
+                            pwMatchMsg.textContent = '* 비밀번호를 한 번 더 입력하세요.';
+                            pwMatchMsg.style.color = '#b7b7b7';
+                            return false;
+                        }
+
+                        if (pw === pwConfirm) {
+                            pwMatchMsg.textContent = '비밀번호가 일치합니다.';
+                            pwMatchMsg.style.color = '#4caf50';
+                            return true;
+                        } else {
+                            pwMatchMsg.textContent = '비밀번호가 일치하지 않습니다.';
+                            pwMatchMsg.style.color = '#e53637';
+                            return false;
+                        }
+                    }
+
+                    pwInput.addEventListener('input', validatePasswordMatch);
+                    pwConfirmInput.addEventListener('input', validatePasswordMatch);
+
+                    // 제출 전 최종 검증
+                    signupForm.addEventListener('submit', function (e) {
+                        if (!isIdChecked) {
+                            e.preventDefault();
+                            alert('아이디 중복 확인을 먼저 진행해주세요.');
+                            checkIdBtn.focus();
+                            return;
+                        }
+
+                        if (!validatePasswordMatch()) {
+                            e.preventDefault();
+                            alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+                            pwConfirmInput.focus();
+                        }
+                    });
+                })();
+    </script>
 
 </body>
 

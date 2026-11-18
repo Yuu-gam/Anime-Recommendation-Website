@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
@@ -7,12 +7,12 @@
     <meta name="keywords" content="Anime, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Anime | Template</title>
+    <title>Anime | 로그인</title>
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap"
-    rel="stylesheet">
+          rel="stylesheet">
 
     <!-- Css Styles -->
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
@@ -38,7 +38,7 @@
                 <div class="col-lg-2">
                     <div class="header__logo">
                         <a href="./index.html">
-                            <img src="img/logo.png" alt="">
+                            <img src="img/logo.png" alt="Logo">
                         </a>
                     </div>
                 </div>
@@ -46,27 +46,24 @@
                     <div class="header__nav">
                         <nav class="header__menu mobile-menu">
                             <ul>
-                                <li><a href="./index.html">Homepage</a></li>
-                                <li><a href="./categories.html">Categories <span class="arrow_carrot-down"></span></a>
+                                <li><a href="./index.html">홈</a></li>
+                                <li><a href="./categories.html">카테고리(장르)</a></li>
+                                <li><a href="./search-result.html">검색</a></li>
+                                <li class="active">
+                                    <a href="./login.html">로그인 / 마이페이지 <span class="arrow_carrot-down"></span></a>
                                     <ul class="dropdown">
-                                        <li><a href="./categories.html">Categories</a></li>
-                                        <li><a href="./anime-details.html">Anime Details</a></li>
-                                        <li><a href="./anime-watching.html">Anime Watching</a></li>
-                                        <li><a href="./blog-details.html">Blog Details</a></li>
-                                        <li><a href="./signup.html">Sign Up</a></li>
-                                        <li><a href="./login.html">Login</a></li>
+                                        <li><a href="./login.html">로그인</a></li>
+                                        <li><a href="./signup.html">회원가입</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="./blog.html">Our Blog</a></li>
-                                <li><a href="#">Contacts</a></li>
                             </ul>
                         </nav>
                     </div>
                 </div>
                 <div class="col-lg-2">
                     <div class="header__right">
-                        <a href="#" class="search-switch"><span class="icon_search"></span></a>
-                        <a href="./login.html"><span class="icon_profile"></span></a>
+                        <a href="#" class="search-switch" title="빠른 검색"><span class="icon_search"></span></a>
+                        <a href="./login.html" title="로그인 / 마이페이지"><span class="icon_profile"></span></a>
                     </div>
                 </div>
             </div>
@@ -74,70 +71,52 @@
         </div>
     </header>
     <!-- Header End -->
-
     <!-- Normal Breadcrumb Begin -->
     <section class="normal-breadcrumb set-bg" data-setbg="img/normal-breadcrumb.jpg">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <div class="normal__breadcrumb__text">
-                        <h2>Login</h2>
-                        <p>Welcome to the official Anime blog.</p>
+                        <h2>로그인</h2>
+                        <p>애니메이션 정보 및 추천 서비스에 오신 것을 환영합니다.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
     <!-- Normal Breadcrumb End -->
-
     <!-- Login Section Begin -->
     <section class="login spad">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6">
                     <div class="login__form">
-                        <h3>Login</h3>
-                        <form action="#">
+                        <h3>로그인</h3>
+                        <!-- [BACKEND] action 경로를 실제 로그인 처리 PHP 파일명(예: login_process.php)으로 연결 -->
+                        <form action="login_process.php" method="POST">
                             <div class="input__item">
-                                <input type="text" placeholder="Email address">
-                                <span class="icon_mail"></span>
+                                <input type="text" name="user_id" placeholder="아이디" required>
+                                <span class="icon_profile"></span>
                             </div>
                             <div class="input__item">
-                                <input type="text" placeholder="Password">
+                                <input type="password" name="password" placeholder="비밀번호" required>
                                 <span class="icon_lock"></span>
                             </div>
-                            <button type="submit" class="site-btn">Login Now</button>
+                            <button type="submit" class="site-btn">로그인</button>
                         </form>
-                        <a href="#" class="forget_pass">Forgot Your Password?</a>
+                        <a href="#" onclick="alert('비밀번호 찾기 기능은 추후 업데이트 예정입니다.'); return false;" class="forget_pass">비밀번호를 잊으셨나요?</a>
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="login__register">
-                        <h3>Dont’t Have An Account?</h3>
-                        <a href="#" class="primary-btn">Register Now</a>
-                    </div>
-                </div>
-            </div>
-            <div class="login__social">
-                <div class="row d-flex justify-content-center">
-                    <div class="col-lg-6">
-                        <div class="login__social__links">
-                            <span>or</span>
-                            <ul>
-                                <li><a href="#" class="facebook"><i class="fa fa-facebook"></i> Sign in With
-                                Facebook</a></li>
-                                <li><a href="#" class="google"><i class="fa fa-google"></i> Sign in With Google</a></li>
-                                <li><a href="#" class="twitter"><i class="fa fa-twitter"></i> Sign in With Twitter</a>
-                                </li>
-                            </ul>
-                        </div>
+                        <h3>계정이 없으신가요?</h3>
+                        <a href="./signup.html" class="primary-btn">회원가입</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
     <!-- Login Section End -->
-
     <!-- Footer Section Begin -->
     <footer class="footer">
         <div class="page-up">
@@ -147,41 +126,39 @@
             <div class="row">
                 <div class="col-lg-3">
                     <div class="footer__logo">
-                        <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                        <a href="./index.html"><img src="img/logo.png" alt="Logo"></a>
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="footer__nav">
                         <ul>
-                            <li class="active"><a href="./index.html">Homepage</a></li>
-                            <li><a href="./categories.html">Categories</a></li>
-                            <li><a href="./blog.html">Our Blog</a></li>
-                            <li><a href="#">Contacts</a></li>
+                            <li><a href="./index.html">홈</a></li>
+                            <li><a href="./categories.html">카테고리(장르)</a></li>
+                            <li><a href="./search-result.html">검색</a></li>
+                            <li><a href="./login.html">로그인 / 마이페이지</a></li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-3">
                     <p>
-                        Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://ahmedmaher-portfolio.vercel.app/" target="_blank">Ahmed Maher</a>
-                      </p>
-
-                  </div>
-              </div>
-          </div>
-      </footer>
-      <!-- Footer Section End -->
-
-      <!-- Search model Begin -->
-      <div class="search-model">
+                        Copyright &copy;
+                        <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://ahmedmaher-portfolio.vercel.app/" target="_blank">Ahmed Maher</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer Section End -->
+    <!-- Search model Begin -->
+    <div class="search-model">
         <div class="h-100 d-flex align-items-center justify-content-center">
             <div class="search-close-switch"><i class="icon_close"></i></div>
-            <form class="search-model-form">
-                <input type="text" id="search-input" placeholder="Search here.....">
+            <form action="search-result.html" method="GET" class="search-model-form">
+                <input type="text" name="keyword" id="search-input" placeholder="작품 제목을 입력하세요..." autocomplete="off">
             </form>
         </div>
     </div>
     <!-- Search model end -->
-
     <!-- Js Plugins -->
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -191,7 +168,6 @@
     <script src="js/jquery.slicknav.js"></script>
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
-
 
 </body>
 
