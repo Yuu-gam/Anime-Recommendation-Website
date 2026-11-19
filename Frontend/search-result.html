@@ -306,10 +306,10 @@
                         <!-- AniDB 스타일 기본 + 상세 검색 영역 Begin -->
                         <div class="anidb-search-box">
                             <!-- [BACKEND] PHP 변환 시 action="search-result.php" 로 변경 -->
-                            <form id="detail-search-form" action="search-result.html" method="GET">
+                            <form id="detail-search-form" action="../php/searchResult.php" method="GET">
                                 <!-- 1. 기본 제목 검색줄 -->
                                 <div class="anidb-search-bar">
-                                    <input type="text" id="keyword-input" name="keyword" placeholder="작품 제목 또는 키워드를 입력하세요..." autocomplete="off">
+                                    <input type="text" id="keyword" name="anime_name" placeholder="작품 제목 또는 키워드를 입력하세요..." autocomplete="off">
                                     <button type="button" id="toggle-filter-btn" class="btn-filter-toggle" data-toggle="collapse" data-target="#advanced-filter-box" aria-expanded="false" aria-controls="advanced-filter-box">
                                         <i class="fa fa-sliders"></i> 상세 검색
                                     </button>
@@ -322,6 +322,7 @@
                                 <div class="collapse" id="advanced-filter-box">
                                     <div class="advanced-filter-panel">
                                         <!-- 장르 / 태그 다중 선택 ($_GET['genres'] 배열로 전송) -->
+                                        <!--
                                         <div class="filter-group">
                                             <label class="filter-group-label">장르 / 태그 <span>(복수 선택 가능)</span></label>
                                             <div class="filter-chip-list">
@@ -337,6 +338,7 @@
                                                 <label class="filter-chip"><input type="checkbox" name="genres[]" value="Slice of Life"><span>일상 (Slice of Life)</span></label>
                                             </div>
                                         </div>
+                                        -->
 
                                         <div class="row">
                                             <!-- 작품 유형 ($_GET['types'] 배열로 전송) -->
@@ -344,14 +346,15 @@
                                                 <div class="filter-group">
                                                     <label class="filter-group-label">작품 유형</label>
                                                     <div class="filter-chip-list">
-                                                        <label class="filter-chip"><input type="checkbox" name="types[]" value="TV"><span>TV 시리즈</span></label>
-                                                        <label class="filter-chip"><input type="checkbox" name="types[]" value="Movie"><span>극장판</span></label>
-                                                        <label class="filter-chip"><input type="checkbox" name="types[]" value="OVA"><span>OVA / 스페셜</span></label>
+                                                        <label class="filter-chip"><input type="checkbox" name="anime_type[]" value="TV"><span>TV 시리즈</span></label>
+                                                        <label class="filter-chip"><input type="checkbox" name="anime_type[]" value="Movie"><span>극장판</span></label>
+                                                        <!--<label class="filter-chip"><input type="checkbox" name="anime_types[]" value="OVA"><span>OVA / 스페셜</span></label>-->
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <!-- 방영 상태 ($_GET['status'] 단일 값으로 전송) -->
+                                            <!--
                                             <div class="col-md-6">
                                                 <div class="filter-group">
                                                     <label class="filter-group-label">방영 상태</label>
@@ -362,16 +365,28 @@
                                                         <label class="filter-chip"><input type="radio" name="status" value="upcoming"><span>방영예정</span></label>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                         </div>
 
                                         <!-- 방영 연도 범위 ($_GET['year_from'], $_GET['year_to']) -->
                                         <div class="filter-group" style="margin-bottom: 10px;">
-                                            <label class="filter-group-label">방영 연도 <span>(시작 연도 ~ 종료 연도)</span></label>
+                                            <label class="filter-group-label">방영 연도 </label>
                                             <div class="year-range-inputs">
-                                                <input type="number" id="year-from" name="year_from" min="1970" max="2030" placeholder="예: 2015">
-                                                <span>~</span>
-                                                <input type="number" id="year-to" name="year_to" min="1970" max="2030" placeholder="예: 2026">
+                                                <input type="number" id="anime_year" name="anime_year" min="1970" max="2030" placeholder="예: 2015">
+                                            </div>
+                                        </div>
+
+                                        <!-- 방영 분기 -->
+                                        <div class="col-md-6">
+                                            <div class="filter-group">
+                                                <label class="filter-group-label">방영 분기</label>
+                                                <div class="filter-chip-list">
+                                                    <label class="filter-chip"><input type="radio" name="anime_quarter" value="" checked><span>전체 분기</span></label>
+                                                    <label class="filter-chip"><input type="radio" name="anime_quarter" value="1"><span>1분기</span></label>
+                                                    <label class="filter-chip"><input type="radio" name="anime_quarter" value="2"><span>2분기</span></label>
+                                                    <label class="filter-chip"><input type="radio" name="anime_quarter" value="3"><span>3분기</span></label>
+                                                    <label class="filter-chip"><input type="radio" name="anime_quarter" value="4"><span>4분기</span></label>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -395,7 +410,8 @@
                                     <div class="section-title">
                                         <h4>검색 결과: "<span id="search-term" style="color: #e53637;">전체</span>"</h4>
                                     </div>
-                                    <div id="active-filter-summary" class="active-filter-summary"></div>
+                                    <div id="active-filter-summary" class="active-filter-summary">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -590,7 +606,7 @@
         <div class="h-100 d-flex align-items-center justify-content-center">
             <div class="search-close-switch"><i class="icon_close"></i></div>
             <form action="search-result.html" method="GET" class="search-model-form">
-                <input type="text" name="keyword" id="search-input" placeholder="작품 제목을 입력하세요..." autocomplete="off">
+                <input type="text" name="anime_name" id="anime_name" placeholder="작품 제목을 입력하세요..." autocomplete="off">
             </form>
         </div>
     </div>
@@ -606,6 +622,7 @@
     <script src="js/main.js"></script>
 
     <!-- 검색어 및 상세 필터 상태 복원/표시 스크립트 -->
+    <!--
     <script>
                 (function () {
                     const urlParams = new URLSearchParams(window.location.search);
@@ -680,7 +697,7 @@
                         document.getElementById('year-to').value = '';
                     });
                 })();
-    </script>
+    </script>-->
 </body>
 
 </html>

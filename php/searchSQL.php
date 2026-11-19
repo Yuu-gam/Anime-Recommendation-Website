@@ -2,6 +2,11 @@
     header('Content-Type: text/html; charset=UTF-8');
     session_start();
 
+    ini_set('display_errors', 1);
+	error_reporting(E_ALL);
+
+    $login_id = $_SESSION['login_id'] ?? '-';
+
     //log, DB 연결
 	require_once(__DIR__ . '/log.php');
 	include('./SQLconstants.php');
@@ -73,6 +78,15 @@
 
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
+    $searchDetails = sprintf( //로그 용 출력 내용 함수
+            "검색어: [%s], 유형: [%s], 년도: [%s], 분기: [%s] | 결과 건수: %d건",
+            $name !== '' ? $name : '전체',
+            !empty($validTypes) ? implode(', ', $validTypes) : '전체',
+            $year !== '' ? $year : '전체',
+            $quarter !== '' ? $quarter : '전체',
+            mysqli_num_rows($result)
+        );
+    writeLog("검색- user(" . $login_id . ") " . $searchDetails);
 ?>
 <!DOCTYPE html>
 <html lang="ko">
@@ -120,6 +134,6 @@
 </body>
 </html>
 <?php
-mysqli_stmt_close($stmt);
-mysqli_close($conn);
+    mysqli_stmt_close($stmt);
+    mysqli_close($conn);
 ?>

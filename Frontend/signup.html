@@ -106,9 +106,9 @@
                                 * 아이디 입력 후 중복 확인을 눌러주세요.
                             </small>
 
-                            <!-- 2. 이름(닉네임) -->
+                            <!-- 2. 이름(닉네임) -> 나이로 변경했습니다. -->
                             <div class="input__item">
-                                <input type="text" id="user_name" name="user_name" placeholder="이름 (닉네임)" required>
+                                <input type="text" id="age" name="age" placeholder="나이" required>
                                 <span class="icon_profile"></span>
                             </div>
 
@@ -190,96 +190,97 @@
     <script src="js/main.js"></script>
 
     <!-- 회원가입 아이디 중복 확인 및 비밀번호 일치 검증 스크립트 -->
-    <script>
-                (function () {
-                    const userIdInput = document.getElementById('user_id');
-                    const checkIdBtn = document.getElementById('check-id-btn');
-                    const idCheckMsg = document.getElementById('id-check-msg');
-                    const pwInput = document.getElementById('password');
-                    const pwConfirmInput = document.getElementById('password_confirm');
-                    const pwMatchMsg = document.getElementById('pw-match-msg');
-                    const signupForm = document.getElementById('signup-form');
+    <!--
+        <script>
+                    (function () {
+                        const userIdInput = document.getElementById('user_id');
+                        const checkIdBtn = document.getElementById('check-id-btn');
+                        const idCheckMsg = document.getElementById('id-check-msg');
+                        const pwInput = document.getElementById('password');
+                        const pwConfirmInput = document.getElementById('password_confirm');
+                        const pwMatchMsg = document.getElementById('pw-match-msg');
+                        const signupForm = document.getElementById('signup-form');
 
-                    let isIdChecked = false;
+                        let isIdChecked = false;
 
-                    userIdInput.addEventListener('input', function () {
-                        isIdChecked = false;
-                        idCheckMsg.textContent = '* 아이디 입력 후 중복 확인을 눌러주세요.';
-                        idCheckMsg.style.color = '#b7b7b7';
-                    });
+                        userIdInput.addEventListener('input', function () {
+                            isIdChecked = false;
+                            idCheckMsg.textContent = '* 아이디 입력 후 중복 확인을 눌러주세요.';
+                            idCheckMsg.style.color = '#b7b7b7';
+                        });
 
-                    checkIdBtn.addEventListener('click', function () {
-                        const userId = userIdInput.value.trim();
-                        if (!userId) {
-                            alert('아이디를 먼저 입력해주세요.');
-                            userIdInput.focus();
+                        checkIdBtn.addEventListener('click', function () {
+                            const userId = userIdInput.value.trim();
+                            if (!userId) {
+                                alert('아이디를 먼저 입력해주세요.');
+                                userIdInput.focus();
+                                return;
+                            }
+
+                            // [BACKEND] 실제 PHP 중복 확인 API(예: check_id.php?user_id=...) 연동 시 아래 fetch 주석을 해제하여 사용
+                            /*
+                            fetch('check_id.php?user_id=' + encodeURIComponent(userId))
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.available) {
+                                        isIdChecked = true;
+                                        idCheckMsg.textContent = '사용 가능한 아이디입니다.';
+                                        idCheckMsg.style.color = '#4caf50';
+                                    } else {
+                                        isIdChecked = false;
+                                        idCheckMsg.textContent = '이미 사용 중인 아이디입니다.';
+                                        idCheckMsg.style.color = '#e53637';
+                                    }
+                                });
                             return;
+                            */
+
+                            isIdChecked = true;
+                            idCheckMsg.textContent = '사용 가능한 아이디입니다. (DB 연동 전 임시 확인)';
+                            idCheckMsg.style.color = '#4caf50';
+                        });
+
+                        function validatePasswordMatch() {
+                            const pw = pwInput.value;
+                            const pwConfirm = pwConfirmInput.value;
+
+                            if (!pwConfirm) {
+                                pwMatchMsg.textContent = '* 비밀번호를 한 번 더 입력하세요.';
+                                pwMatchMsg.style.color = '#b7b7b7';
+                                return false;
+                            }
+
+                            if (pw === pwConfirm) {
+                                pwMatchMsg.textContent = '비밀번호가 일치합니다.';
+                                pwMatchMsg.style.color = '#4caf50';
+                                return true;
+                            } else {
+                                pwMatchMsg.textContent = '비밀번호가 일치하지 않습니다.';
+                                pwMatchMsg.style.color = '#e53637';
+                                return false;
+                            }
                         }
 
-                        // [BACKEND] 실제 PHP 중복 확인 API(예: check_id.php?user_id=...) 연동 시 아래 fetch 주석을 해제하여 사용
-                        /*
-                        fetch('check_id.php?user_id=' + encodeURIComponent(userId))
-                            .then(res => res.json())
-                            .then(data => {
-                                if (data.available) {
-                                    isIdChecked = true;
-                                    idCheckMsg.textContent = '사용 가능한 아이디입니다.';
-                                    idCheckMsg.style.color = '#4caf50';
-                                } else {
-                                    isIdChecked = false;
-                                    idCheckMsg.textContent = '이미 사용 중인 아이디입니다.';
-                                    idCheckMsg.style.color = '#e53637';
-                                }
-                            });
-                        return;
-                        */
+                        pwInput.addEventListener('input', validatePasswordMatch);
+                        pwConfirmInput.addEventListener('input', validatePasswordMatch);
 
-                        isIdChecked = true;
-                        idCheckMsg.textContent = '사용 가능한 아이디입니다. (DB 연동 전 임시 확인)';
-                        idCheckMsg.style.color = '#4caf50';
-                    });
+                        signupForm.addEventListener('submit', function (e) {
+                            if (!isIdChecked) {
+                                e.preventDefault();
+                                alert('아이디 중복 확인을 먼저 진행해주세요.');
+                                checkIdBtn.focus();
+                                return;
+                            }
 
-                    function validatePasswordMatch() {
-                        const pw = pwInput.value;
-                        const pwConfirm = pwConfirmInput.value;
-
-                        if (!pwConfirm) {
-                            pwMatchMsg.textContent = '* 비밀번호를 한 번 더 입력하세요.';
-                            pwMatchMsg.style.color = '#b7b7b7';
-                            return false;
-                        }
-
-                        if (pw === pwConfirm) {
-                            pwMatchMsg.textContent = '비밀번호가 일치합니다.';
-                            pwMatchMsg.style.color = '#4caf50';
-                            return true;
-                        } else {
-                            pwMatchMsg.textContent = '비밀번호가 일치하지 않습니다.';
-                            pwMatchMsg.style.color = '#e53637';
-                            return false;
-                        }
-                    }
-
-                    pwInput.addEventListener('input', validatePasswordMatch);
-                    pwConfirmInput.addEventListener('input', validatePasswordMatch);
-
-                    signupForm.addEventListener('submit', function (e) {
-                        if (!isIdChecked) {
-                            e.preventDefault();
-                            alert('아이디 중복 확인을 먼저 진행해주세요.');
-                            checkIdBtn.focus();
-                            return;
-                        }
-
-                        if (!validatePasswordMatch()) {
-                            e.preventDefault();
-                            alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
-                            pwConfirmInput.focus();
-                        }
-                    });
-                })();
-    </script>
+                            if (!validatePasswordMatch()) {
+                                e.preventDefault();
+                                alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+                                pwConfirmInput.focus();
+                            }
+                        });
+                    })();
+        </script>-->
 
 </body>
 
-</html>
+    </html>
