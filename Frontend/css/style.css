@@ -663,6 +663,13 @@ ol {
 	bottom: 10px;
 }
 
+.anime-result-image {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
 .product__item__text {
 	padding-top: 20px;
 }

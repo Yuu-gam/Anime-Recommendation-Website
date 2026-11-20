@@ -506,7 +506,12 @@
                                 ?>
                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                     <div class="product__item">
-                                        <div class="product__item__pic set-bg" data-setbg="<?= h($imgSrc) ?>">
+                                        <div class="product__item__pic">
+                                            <img 
+                                                class="anime-result-image"
+                                                src="<?= h($imgSrc) ?>"
+                                                referrerpolicy="no-referrer"
+                                                alt="<?= h($anime['anime_name']) ?>">
                                             <?php if (!empty($anime['anime_quarter'])): ?>
                                                 <div class="ep"><?= h($anime['anime_quarter']) ?>분기</div>
                                             <?php endif; ?>
