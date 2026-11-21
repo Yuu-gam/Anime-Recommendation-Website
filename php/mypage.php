@@ -42,29 +42,26 @@
             $checkResult = mysqli_stmt_get_result($checkStmt);
 
             if ($row = mysqli_fetch_assoc($checkResult)) {
-                // 존재하면 평점 업데이트
+                //만약 평점이 있을 경우, 이미 작성한 평점을 자유롭게 수정
                 $upStmt = mysqli_prepare($conn, "UPDATE History SET rating = ? WHERE history_id = ?");
                 mysqli_stmt_bind_param($upStmt, "di", $rating, $row['history_id']);
                 mysqli_stmt_execute($upStmt);
                 mysqli_stmt_close($upStmt);
-            } else {
-                // 없으면 새로 생성 (status 기본값 1 부여)
-                $insStmt = mysqli_prepare($conn, "INSERT INTO History (user_id, anime_id, rating, status) VALUES (?, ?, ?, 1)");
-                mysqli_stmt_bind_param($insStmt, "iid", $user_id, $target_anime_id, $rating);
-                mysqli_stmt_execute($insStmt);
-                mysqli_stmt_close($insStmt);
             }
             mysqli_stmt_close($checkStmt);
 
+            //로그 작성
             writeLog("마이페이지 평점 수정 - user(" . $login_id . ") anime_id(" . $target_anime_id . ") 평점: " . $rating);
             
             echo "<script>alert('평점이 저장되었습니다.'); location.href='./favorite.php';</script>";
             exit;
         }
     }
-
+    //페이지 입장했을 때 로그 출력용 - 필요없을 것 같으면 안넣어도됨(로그가 뚱뚱해질수도있어!!)
     writeLog("마이페이지 접속 - user(" . $login_id . ")");
 ?>
+
+<!--여기서부터-->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -93,7 +90,10 @@
     <a class="button" href="./search.php">작품 검색</a>
     <a class="button" href="./main.php">메인으로</a>
 </div>
+<!--여기까지는 무시 (페이지 표시용)-->
 
+
+<!--즐겨찾기 출력-->
 <h2>1. 즐겨찾기 목록</h2>
 <?php
     // favorites 테이블과 Animes 테이블 조인, History 테이블에서 평점 조인
@@ -110,8 +110,8 @@
 
     if (mysqli_num_rows($fav_result) === 0):
 ?>
-    <p>즐겨찾기한 작품이 없습니다.</p>
-<?php else: ?>
+    <p>즐겨찾기한 작품이 없습니다.</p> <!--fav result에서 결과치가 0일 경우 즐찾 작품 없다는 뜻-->
+<?php else: ?> <!--있을경우 출력하도록 while-->
     <?php while ($anime = mysqli_fetch_assoc($fav_result)): ?>
         <?php $currentRating = isset($anime['my_rating']) ? (int)$anime['my_rating'] : 0; ?>
         <article class="anime-card">
@@ -149,6 +149,8 @@
     mysqli_stmt_close($stmt_fav);
 ?>
 
+
+<!--평점 출력-->
 <h2>2. 내가 남긴 평점 전체 확인</h2>
 <?php
     // History 테이블에서 평점이 등록된 작품 목록 조회
@@ -166,6 +168,9 @@
     if (mysqli_num_rows($rat_result) === 0):
 ?>
     <p>작성한 평점이 없습니다.</p>
+
+
+<!--저장된 평점 출력하기(while)-->
 <?php else: ?>
     <?php while ($rated = mysqli_fetch_assoc($rat_result)): ?>
         <article class="anime-card">

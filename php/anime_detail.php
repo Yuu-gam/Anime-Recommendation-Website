@@ -15,16 +15,26 @@
     }
 
     $animeId = isset($_GET['anime_id']) ? (int)$_GET['anime_id'] : 0;
-    $userId = $_SESSION['user_id'] ?? 1; // 로그인된 유저 ID (기본값 1 또는 세션 연동)
 
     if ($animeId <= 0) {
         die("잘못된 접근입니다.");
     }
 
-    // POST 요청 처리 (평점 등록 또는 즐겨찾기 토글)
+    // POST 요청 처리 (평점 등록 또는 즐겨찾기 토글 시 로그인 여부 먼저 검사)
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // 비로그인 상태인 경우
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] == "") {
+            echo "<script>
+                alert('로그인을 해주세요!');
+                location.href = './login.php';
+            </script>";
+            exit;
+        }
+
+        $userId = $_SESSION['user_id'];
         $action = $_POST['action'] ?? '';
 
+        //평점
         if ($action === 'update_rating') {
             $rating = (int)($_POST['rating'] ?? 0);
             if ($rating < 0) $rating = 0;
@@ -55,23 +65,23 @@
             exit;
         }
 
+        //즐겨찾기
         if ($action === 'toggle_favorite') {
-            // 예시로 status 값을 토글하거나 별도 즐겨찾기 상태 변경으로 활용 (여기서는 status 비틀기 활용)
-            $checkStmt = mysqli_prepare($conn, "SELECT history_id, status FROM History WHERE user_id = ? AND anime_id = ?");
+            // favorites 테이블에서 해당 유저의 해당 작품 즐겨찾기 여부 확인
+            $checkStmt = mysqli_prepare($conn, "SELECT * FROM favorites WHERE user_id = ? AND anime_id = ?");
             mysqli_stmt_bind_param($checkStmt, "ii", $userId, $animeId);
             mysqli_stmt_execute($checkStmt);
             $checkResult = mysqli_stmt_get_result($checkStmt);
 
-            if ($row = mysqli_fetch_assoc($checkResult)) {
-                // status 값을 0과 1 사이에서 토글 (즐겨찾기 여부 대용)
-                $newStatus = ($row['status'] == 1) ? 0 : 1;
-                $upStmt = mysqli_prepare($conn, "UPDATE History SET status = ? WHERE history_id = ?");
-                mysqli_stmt_bind_param($upStmt, "ii", $newStatus, $row['history_id']);
-                mysqli_stmt_execute($upStmt);
-                mysqli_stmt_close($upStmt);
+            if (mysqli_num_rows($checkResult) > 0) {
+                // 이미 즐겨찾기에 있다면 삭제 (토글 해제)
+                $delStmt = mysqli_prepare($conn, "DELETE FROM favorites WHERE user_id = ? AND anime_id = ?");
+                mysqli_stmt_bind_param($delStmt, "ii", $userId, $animeId);
+                mysqli_stmt_execute($delStmt);
+                mysqli_stmt_close($delStmt);
             } else {
-                // 기록이 없으면 즐겨찾기 켠 상태(status=1, rating=0)로 추가
-                $insStmt = mysqli_prepare($conn, "INSERT INTO History (user_id, anime_id, rating, status) VALUES (?, ?, 0, 1)");
+                // 즐겨찾기에 없다면 새로 추가
+                $insStmt = mysqli_prepare($conn, "INSERT INTO favorites (user_id, anime_id) VALUES (?, ?)");
                 mysqli_stmt_bind_param($insStmt, "ii", $userId, $animeId);
                 mysqli_stmt_execute($insStmt);
                 mysqli_stmt_close($insStmt);
@@ -94,16 +104,35 @@
         die("존재하지 않는 작품입니다.");
     }
 
-    // 2. 유저의 시청 기록(평점, 즐겨찾기 상태 등) 조회
-    $histStmt = mysqli_prepare($conn, "SELECT rating, status FROM History WHERE user_id = ? AND anime_id = ?");
-    mysqli_stmt_bind_param($histStmt, "ii", $userId, $animeId);
-    mysqli_stmt_execute($histStmt);
-    $history = mysqli_fetch_assoc(mysqli_stmt_get_result($histStmt));
-    mysqli_stmt_close($histStmt);
+    // 로그인 상태인 경우 유저의 평점(History)과 즐겨찾기(favorites) 여부 조회
+    $currentRating = 0;
+    $isFavorite = false;
 
-    $currentRating = $history['rating'] ?? 0;
-    // status가 1인 것을 즐겨찾기(별 활성화) 상태로 가정
-    $isFavorite = isset($history['status']) && $history['status'] == 1;
+    if (isset($_SESSION['user_id']) && $_SESSION['user_id'] != "") {
+        $userId = $_SESSION['user_id'];
+        
+        // 1. 평점 조회 (History 테이블)
+        $histStmt = mysqli_prepare($conn, "SELECT rating FROM History WHERE user_id = ? AND anime_id = ?");
+        mysqli_stmt_bind_param($histStmt, "ii", $userId, $animeId);
+        mysqli_stmt_execute($histStmt);
+        $history = mysqli_fetch_assoc(mysqli_stmt_get_result($histStmt));
+        mysqli_stmt_close($histStmt);
+
+        if ($history) {
+            $currentRating = $history['rating'] ?? 0;
+        }
+
+        // 2. 즐겨찾기 여부 조회 (favorites 테이블)
+        $favStmt = mysqli_prepare($conn, "SELECT * FROM favorites WHERE user_id = ? AND anime_id = ?");
+        mysqli_stmt_bind_param($favStmt, "ii", $userId, $animeId);
+        mysqli_stmt_execute($favStmt);
+        $favResult = mysqli_stmt_get_result($favStmt);
+        
+        if (mysqli_num_rows($favResult) > 0) {
+            $isFavorite = true;
+        }
+        mysqli_stmt_close($favStmt);
+    }
 
     mysqli_close($conn);
 ?>
