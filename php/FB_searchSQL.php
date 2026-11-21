@@ -318,7 +318,7 @@
             <div class="row">
                 <div class="col-lg-2">
                     <div class="header__logo">
-                        <a href="../Frontend/index.html">
+                        <a href="./FB_main.php">
                             <img src="../Frontend/img/logo.png" alt="Logo">
                         </a>
                     </div>
@@ -327,10 +327,10 @@
                     <div class="header__nav">
                         <nav class="header__menu mobile-menu">
                             <ul>
-                                <li><a href="../Frontend/index.html">홈</a></li>
+                                <li><a href="./FB_main.php">홈</a></li>
                                 <li><a href="../Frontend/categories.html">카테고리(장르)</a></li>
                                 <li class="active"><a href="./FB_searchSQL.php">검색</a></li>
-                                <li><a href="../Frontend/favorites.html">즐겨찾기</a></li>
+                                <li><a href="./FB_favorites.php">즐겨찾기</a></li>
                                 <li>
                                     <a href="../Frontend/login.html">로그인 / 마이페이지 <span class="arrow_carrot-down"></span></a>
                                     <ul class="dropdown">
@@ -360,7 +360,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="breadcrumb__links">
-                        <a href="../Frontend/index.html"><i class="fa fa-home"></i> 홈</a>
+                        <a href="./FB_main.php"><i class="fa fa-home"></i> 홈</a>
                         <span>검색</span>
                     </div>
                 </div>
@@ -510,7 +510,7 @@
                                         $imgSrc = '../Frontend/' . ltrim($rawImg, './');
                                     }
 
-                                    $detailUrl = '../Frontend/anime-details.html?id=' . urlencode((string)$anime['anime_id']);
+                                    $detailUrl = './FB_animeDetail.php?id=' . urlencode((string)$anime['anime_id']);
                                 ?>
                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                     <div class="product__item">
@@ -567,22 +567,22 @@
                                 <div class="product__sidebar__view__item set-bg mix day years" data-setbg="../Frontend/img/sidebar/tv-1.jpg">
                                     <div class="ep">방영중</div>
                                     <div class="view"><i class="fa fa-eye"></i> 9,141</div>
-                                    <h5><a href="../Frontend/anime-details.html?id=16">보루토: 나루토 넥스트 제너레이션즈</a></h5>
+                                    <h5><a href="./FB_animeDetail.php?id=16">보루토: 나루토 넥스트 제너레이션즈</a></h5>
                                 </div>
                                 <div class="product__sidebar__view__item set-bg mix month week" data-setbg="../Frontend/img/sidebar/tv-2.jpg">
                                     <div class="ep">24 / 24</div>
                                     <div class="view"><i class="fa fa-eye"></i> 12,300</div>
-                                    <h5><a href="../Frontend/anime-details.html?id=1">일곱 개의 대죄: 신들의 역린</a></h5>
+                                    <h5><a href="./FB_animeDetail.php?id=1">일곱 개의 대죄: 신들의 역린</a></h5>
                                 </div>
                                 <div class="product__sidebar__view__item set-bg mix week years" data-setbg="../Frontend/img/sidebar/tv-3.jpg">
                                     <div class="ep">23 / 23</div>
                                     <div class="view"><i class="fa fa-eye"></i> 15,780</div>
-                                    <h5><a href="../Frontend/anime-details.html?id=17">소드 아트 온라인 앨리시제이션 WoU</a></h5>
+                                    <h5><a href="./FB_animeDetail.php?id=17">소드 아트 온라인 앨리시제이션 WoU</a></h5>
                                 </div>
                                 <div class="product__sidebar__view__item set-bg mix years month" data-setbg="../Frontend/img/sidebar/tv-4.jpg">
                                     <div class="ep">극장판</div>
                                     <div class="view"><i class="fa fa-eye"></i> 18,410</div>
-                                    <h5><a href="../Frontend/anime-details.html?id=18">Fate/stay night [Heaven's Feel] I</a></h5>
+                                    <h5><a href="./FB_animeDetail.php?id=18">Fate/stay night [Heaven's Feel] I</a></h5>
                                 </div>
                             </div>
                         </div>
@@ -602,16 +602,16 @@
             <div class="row">
                 <div class="col-lg-3">
                     <div class="footer__logo">
-                        <a href="../Frontend/index.html"><img src="../Frontend/img/logo.png" alt="Logo"></a>
+                        <a href="./FB_main.php"><img src="../Frontend/img/logo.png" alt="Logo"></a>
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="footer__nav">
                         <ul>
-                            <li><a href="../Frontend/index.html">홈</a></li>
+                            <li><a href="./FB_main.php">홈</a></li>
                             <li><a href="../Frontend/categories.html">카테고리(장르)</a></li>
                             <li><a href="./searchResult.php">검색</a></li>
-                            <li><a href="../Frontend/favorites.html">즐겨찾기</a></li>
+                            <li><a href="./FB_favorites.php">즐겨찾기</a></li>
                             <li><a href="../Frontend/login.html">로그인 / 마이페이지</a></li>
                         </ul>
                     </div>

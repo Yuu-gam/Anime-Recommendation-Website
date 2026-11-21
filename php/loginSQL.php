@@ -28,7 +28,7 @@
 			$_SESSION['login_id'] = $result['login_id'];
 			writeLog("로그인 성공 - 유저 아이디: ".$login_id);
 			$message = " * 로그인되었습니다.";
-			$nextPage = "../Frontend/index.html";
+			$nextPage = "./FB_main.php";
 		}
 		else // 비밀번호 불일치
 		{

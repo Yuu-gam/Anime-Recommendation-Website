@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check_id'])) {
             <div class="row">
                 <div class="col-lg-2">
                     <div class="header__logo">
-                        <a href="../Frontend/index.html">
+                        <a href="./FB_main.php">
                             <img src="../Frontend/img/logo.png" alt="Logo">
                         </a>
                     </div>
@@ -98,10 +98,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check_id'])) {
                     <div class="header__nav">
                         <nav class="header__menu mobile-menu">
                             <ul>
-                                <li><a href="../Frontend/index.html">홈</a></li>
+                                <li><a href="./FB_main.php">홈</a></li>
                                 <li><a href="../Frontend/categories.html">카테고리(장르)</a></li>
                                 <li><a href="./FB_searchSQL.php">검색</a></li>
-                                <li><a href="../Frontend/favorites.html">즐겨찾기</a></li>
+                                <li><a href="./FB_favorites.php">즐겨찾기</a></li>
                                 <li class="active">
                                     <a href="../Frontend/login.html">로그인 / 마이페이지 <span class="arrow_carrot-down"></span></a>
                                     <ul class="dropdown">
@@ -236,16 +236,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check_id'])) {
             <div class="row">
                 <div class="col-lg-3">
                     <div class="footer__logo">
-                        <a href="../Frontend/index.html"><img src="../Frontend/img/logo.png" alt="Logo"></a>
+                        <a href="./FB_main.php"><img src="../Frontend/img/logo.png" alt="Logo"></a>
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="footer__nav">
                         <ul>
-                            <li><a href="../Frontend/index.html">홈</a></li>
+                            <li><a href="../FB_main.php">홈</a></li>
                             <li><a href="../Frontend/categories.html">카테고리(장르)</a></li>
                             <li><a href="./FB_searchSQL.php">검색</a></li>
-                            <li><a href="../Frontend/favorites.html">즐겨찾기</a></li>
+                            <li><a href="./FB_favorites.php">즐겨찾기</a></li>
                             <li><a href="../Frontend/login.html">로그인 / 마이페이지</a></li>
                         </ul>
                     </div>

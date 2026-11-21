@@ -68,20 +68,20 @@
         //즐겨찾기
         if ($action === 'toggle_favorite') {
             // favorites 테이블에서 해당 유저의 해당 작품 즐겨찾기 여부 확인
-            $checkStmt = mysqli_prepare($conn, "SELECT * FROM favorites WHERE user_id = ? AND anime_id = ?");
+            $checkStmt = mysqli_prepare($conn, "SELECT * FROM Favorites WHERE user_id = ? AND anime_id = ?");
             mysqli_stmt_bind_param($checkStmt, "ii", $userId, $animeId);
             mysqli_stmt_execute($checkStmt);
             $checkResult = mysqli_stmt_get_result($checkStmt);
 
             if (mysqli_num_rows($checkResult) > 0) {
                 // 이미 즐겨찾기에 있다면 삭제 (토글 해제)
-                $delStmt = mysqli_prepare($conn, "DELETE FROM favorites WHERE user_id = ? AND anime_id = ?");
+                $delStmt = mysqli_prepare($conn, "DELETE FROM Favorites WHERE user_id = ? AND anime_id = ?");
                 mysqli_stmt_bind_param($delStmt, "ii", $userId, $animeId);
                 mysqli_stmt_execute($delStmt);
                 mysqli_stmt_close($delStmt);
             } else {
                 // 즐겨찾기에 없다면 새로 추가
-                $insStmt = mysqli_prepare($conn, "INSERT INTO favorites (user_id, anime_id) VALUES (?, ?)");
+                $insStmt = mysqli_prepare($conn, "INSERT INTO Favorites (user_id, anime_id) VALUES (?, ?)");
                 mysqli_stmt_bind_param($insStmt, "ii", $userId, $animeId);
                 mysqli_stmt_execute($insStmt);
                 mysqli_stmt_close($insStmt);
@@ -123,7 +123,7 @@
         }
 
         // 2. 즐겨찾기 여부 조회 (favorites 테이블)
-        $favStmt = mysqli_prepare($conn, "SELECT * FROM favorites WHERE user_id = ? AND anime_id = ?");
+        $favStmt = mysqli_prepare($conn, "SELECT * FROM Favorites WHERE user_id = ? AND anime_id = ?");
         mysqli_stmt_bind_param($favStmt, "ii", $userId, $animeId);
         mysqli_stmt_execute($favStmt);
         $favResult = mysqli_stmt_get_result($favStmt);
@@ -187,7 +187,7 @@
             <strong>유형:</strong> <?= h($anime['anime_type']) ?><br>
             <strong>방영년도:</strong> <?= h($anime['release_year']) ?>년<br>
             <strong>방영분기:</strong> <?= h($anime['anime_quarter']) ?>분기<br>
-            <strong>시리즈 ID:</strong> <?= h($anime['seires_id']) ?>
+            <strong>시리즈 ID:</strong> <?= h($anime['series_id']) ?>
         </div>
 
         <!-- 평점 입력 슬라이더 Form -->

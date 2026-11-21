@@ -418,6 +418,19 @@ ol {
 .hero__items {
 	padding: 250px 0 42px 50px;
 	border-radius: 5px;
+	position: relative;
+	overflow: hidden;
+}
+
+.hero-anime-image {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+	z-index: 0;
 }
 
 .hero__text {
@@ -940,6 +953,14 @@ ol {
 	line-height: 30px;
 }
 
+.anime-detail-image {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	border-radius: 5px;
+}
+
 .anime__details__pic {
 	height: 440px;
 	border-radius: 5px;
@@ -1153,6 +1174,56 @@ ol {
 	border: none;
 	padding: 10px 15px;
 	border-radius: 2px;
+}
+
+
+/* 별점 입력 스타일 */
+
+.rating-picker {
+	display: flex;
+	gap: 5px;
+	margin: 10px 0;
+}
+
+.rating-pick-item {
+	position: relative;
+	display: inline-block;
+	width: 32px;
+	height: 36px;
+}
+
+.rating-pick-item i {
+	font-family: FontAwesome;
+	font-size: 28px;
+	color: #b7b7b7;
+	pointer-events: none;
+}
+
+.rating-pick-item i.full,
+.rating-pick-item i.half {
+	color: #e89f12;
+}
+
+.anime__details__form form .rating-picker .rating-hit {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 50%;
+	height: 36px;
+	margin: 0;
+	padding: 0 !important;
+	border: none !important;
+	background: transparent !important;
+	cursor: pointer;
+	z-index: 2;
+}
+
+.rating-hit.left {
+	left: 0;
+}
+
+.rating-hit.right {
+	right: 0;
 }
 
 /*---------------------
