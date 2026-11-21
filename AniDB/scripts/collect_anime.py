@@ -11,6 +11,7 @@ import mysql.connector
 
 BASE_DIR = "/home/animeProject/AniDB/data"
 ID_FILE = os.path.join(BASE_DIR, "korean-anime-ids.txt")
+FAILED_ID_FILE = os.path.join(BASE_DIR, "failed-anime-ids.txt")
 CACHE_DIR = os.path.join(BASE_DIR, "cache")
 
 CLIENT = "webproject"
@@ -96,6 +97,13 @@ def fetch_anime(aid):
     except Exception as e:
         print(f"[ERROR] AniDB ID {aid}: {e}")
         return None
+
+
+def record_failed_id(aid, reason):
+    with open(FAILED_ID_FILE, "a", encoding="utf-8") as f:
+        f.write(f"{aid}\t{reason}\n")
+
+    print(f"[FAILED] AniDB ID {aid}: {reason}")
 
 
 def select_korean_title(root):
@@ -207,33 +215,31 @@ def main():
     with open(ID_FILE, encoding="utf-8") as f:
         ids = [int(line.strip()) for line in f if line.strip()]
 
-    test_ids = ids[:5]
-
-    test_xml = os.path.join(BASE_DIR, "test-anime.xml")
-
-    if os.path.exists(test_xml):
-        import shutil
-        shutil.copy2(
-            test_xml,
-            os.path.join(CACHE_DIR, "anime_1.xml")
-        )
+    target_ids = ids[5:]
 
     connection = None
+    cursor = None
 
     try:
         connection = mysql.connector.connect(**DB_CONFIG)
         cursor = connection.cursor()
 
-        print(f"테스트 대상: {test_ids}")
+        print(f"수집 대상: {len(target_ids)}개")
         print("-" * 50)
 
-        for aid in test_ids:
-            root = fetch_anime(aid)
+        for aid in target_ids:
+            try:
+                root = fetch_anime(aid)
 
-            if root is None:
+                if root is None:
+                    record_failed_id(aid, "API 요청 실패")
+                    continue
+
+                anime = parse_anime(root)
+
+            except Exception as e:
+                record_failed_id(aid, str(e))
                 continue
-
-            anime = parse_anime(root)
 
             if anime is None:
                 print(f"[SKIP] {aid}: 한국어 제목 없음")
@@ -249,7 +255,7 @@ def main():
 
             print("-" * 50)
 
-        print("\n테스트 수집 완료!")
+        print("\n수집 완료!")
 
     except Exception as e:
         if connection and connection.is_connected():
@@ -258,8 +264,10 @@ def main():
         print(f"[DB ERROR] {e}")
 
     finally:
-        if connection and connection.is_connected():
+        if cursor:
             cursor.close()
+
+        if connection and connection.is_connected():
             connection.close()
 
 

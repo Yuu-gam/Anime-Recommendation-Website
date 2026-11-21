@@ -6,6 +6,8 @@
 
 #로그 및 캐시
 *.log
+AniDB/data/cache/
+AniDB/data/failed-anime-ids.txt
 
 #DB credentials
 php/SQLconstants.php
