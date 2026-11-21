@@ -49,7 +49,7 @@
 		<br><br>
 
 		<!-- 1단계: 아이디 입력 및 중복 확인 폼 (자기 자신에게 POST) -->
-		<form name="checkForm" method="post" action="./signup.php">
+		<form name="checkForm" method="post" action="../Frontend/signup.html">
 			아이디 : 
 			<INPUT TYPE="text" name="login_id" SIZE="30" maxlength="50" 
 				value="<?php echo htmlspecialchars($login_id); ?>" 
@@ -59,14 +59,14 @@
 				<INPUT TYPE="submit" name="check_id" value="아이디 중복 확인">
 			<?php else: ?>
 				<span style="color: green; font-size: 0.9em;">✔ 확인완료</span>
-				<a href="./signup.php" style="font-size: 0.8em;">[아이디 변경]</a>
+				<a href="../Frontend/signup.html" style="font-size: 0.8em;">[아이디 변경]</a>
 			<?php endif; ?>
 		</form>
 
 		<!-- 2단계: 중복 확인이 완료된 경우에만 비밀번호 및 나이 입력 폼 활성화 -->
 		<?php if ($is_id_checked): ?>
 		<hr style="width: 400px; margin-left: 0;">
-		<form name="signupForm" method="post" action="./signupSQL.php">
+		<form name="signupForm" method="post" action="../Frontend/signup.html">
 			<!-- 확인된 아이디를 hidden으로 함께 전송 -->
 			<input type="hidden" name="login_id" value="<?php echo htmlspecialchars($login_id); ?>">
 

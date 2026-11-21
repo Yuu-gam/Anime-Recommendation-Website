@@ -329,7 +329,7 @@
                             <ul>
                                 <li><a href="../Frontend/index.html">홈</a></li>
                                 <li><a href="../Frontend/categories.html">카테고리(장르)</a></li>
-                                <li class="active"><a href="./searchResult.php">검색</a></li>
+                                <li class="active"><a href="./FB_searchSQL.php">검색</a></li>
                                 <li><a href="../Frontend/favorites.html">즐겨찾기</a></li>
                                 <li>
                                     <a href="../Frontend/login.html">로그인 / 마이페이지 <span class="arrow_carrot-down"></span></a>
@@ -400,12 +400,20 @@
                                                     <label class="filter-group-label">작품 유형</label>
                                                     <div class="filter-chip-list">
                                                         <label class="filter-chip">
+                                                            <input type="checkbox" name="anime_type[]" value="Movie" <?= in_array('Movie', $validTypes, true) ? 'checked' : '' ?>>
+                                                            <span>TV Series</span>
+                                                        </label>
+                                                        <label class="filter-chip">
                                                             <input type="checkbox" name="anime_type[]" value="TV" <?= in_array('TV', $validTypes, true) ? 'checked' : '' ?>>
-                                                            <span>TV 시리즈</span>
+                                                            <span>TV Special</span>
                                                         </label>
                                                         <label class="filter-chip">
                                                             <input type="checkbox" name="anime_type[]" value="Movie" <?= in_array('Movie', $validTypes, true) ? 'checked' : '' ?>>
-                                                            <span>극장판</span>
+                                                            <span>Movie</span>
+                                                        </label>
+                                                        <label class="filter-chip">
+                                                            <input type="checkbox" name="anime_type[]" value="Movie" <?= in_array('Movie', $validTypes, true) ? 'checked' : '' ?>>
+                                                            <span>OVA</span>
                                                         </label>
                                                     </div>
                                                 </div>

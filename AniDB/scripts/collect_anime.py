@@ -4,6 +4,7 @@ import time
 import os
 import urllib.parse
 import urllib.request
+import urllib.error
 import xml.etree.ElementTree as ET
 from datetime import datetime
 
@@ -20,7 +21,7 @@ PROTO_VERSION = "1"
 
 API_URL = "http://api.anidb.net:9001/httpapi"
 IMAGE_BASE_URL = "https://cdn.anidb.net/images/main/"
-REQUEST_INTERVAL = 2.2
+REQUEST_INTERVAL = 5.0
 
 DB_CONFIG = {
     "host": "localhost",
@@ -32,6 +33,11 @@ DB_CONFIG = {
 os.makedirs(CACHE_DIR, exist_ok=True)
 
 last_request_time = 0
+
+
+class AniDBBannedError(Exception):
+    """AniDB API가 클라이언트를 차단했을 때 발생하는 예외."""
+    pass
 
 
 def read_xml(path):
@@ -74,29 +80,61 @@ def fetch_anime(aid):
     )
 
     print(f"[API] AniDB ID {aid} 요청 중...")
+    last_request_time = time.monotonic()
 
     try:
         with urllib.request.urlopen(request, timeout=30) as response:
             data = response.read()
 
-        last_request_time = time.monotonic()
+    except urllib.error.HTTPError as e:
+        data = e.read()
 
         if data.startswith(b"\x1f\x8b"):
             data = gzip.decompress(data)
 
-        root = ET.fromstring(data)
+        error_text = data.decode("utf-8", errors="replace")
 
-        if root.tag == "error":
-            raise ValueError("AniDB API 오류: " + "".join(root.itertext()))
+        if "banned" in error_text.lower():
+            raise AniDBBannedError(
+                f"AniDB API 차단 응답 (HTTP {e.code}): {error_text[:300]}"
+            )
 
-        with open(cache_path, "wb") as f:
-            f.write(data)
-
-        return root
+        print(f"[ERROR] AniDB ID {aid}: HTTP {e.code} - {error_text[:300]}")
+        return None
 
     except Exception as e:
         print(f"[ERROR] AniDB ID {aid}: {e}")
         return None
+
+    if data.startswith(b"\x1f\x8b"):
+        data = gzip.decompress(data)
+
+    try:
+        root = ET.fromstring(data)
+    except ET.ParseError as e:
+        error_text = data.decode("utf-8", errors="replace")
+
+        if "banned" in error_text.lower():
+            raise AniDBBannedError(
+                f"AniDB API 차단 응답: {error_text[:300]}"
+            )
+
+        print(f"[ERROR] AniDB ID {aid}: XML 파싱 실패 - {e}")
+        return None
+
+    if root.tag == "error":
+        error_text = "".join(root.itertext()).strip()
+
+        if "banned" in error_text.lower():
+            raise AniDBBannedError(f"AniDB API 차단 응답: {error_text}")
+
+        print(f"[ERROR] AniDB ID {aid}: AniDB API 오류 - {error_text}")
+        return None
+
+    with open(cache_path, "wb") as f:
+        f.write(data)
+
+    return root
 
 
 def record_failed_id(aid, reason):
@@ -215,7 +253,9 @@ def main():
     with open(ID_FILE, encoding="utf-8") as f:
         ids = [int(line.strip()) for line in f if line.strip()]
 
-    target_ids = ids[5:]
+    # AniDB ID 774에서 차단이 발생했으므로, 해당 ID부터 다시 확인한다.
+    # 이미 캐시가 있거나 DB에 등록된 ID는 기존 로직에서 재사용/중복 방지된다.
+    target_ids = [aid for aid in ids if aid >= 774]
 
     connection = None
     cursor = None
@@ -227,6 +267,8 @@ def main():
         print(f"수집 대상: {len(target_ids)}개")
         print("-" * 50)
 
+        banned_stop = False
+
         for aid in target_ids:
             try:
                 root = fetch_anime(aid)
@@ -236,6 +278,13 @@ def main():
                     continue
 
                 anime = parse_anime(root)
+
+            except AniDBBannedError as e:
+                record_failed_id(aid, f"AniDB BANNED - 수집 중단: {e}")
+                print("\n[STOP] AniDB 차단 응답을 받아 수집을 즉시 중단합니다.")
+                print("차단이 해제되었는지 확인하기 전까지 다시 실행하지 마세요.")
+                banned_stop = True
+                break
 
             except Exception as e:
                 record_failed_id(aid, str(e))
@@ -255,7 +304,10 @@ def main():
 
             print("-" * 50)
 
-        print("\n수집 완료!")
+        if banned_stop:
+            print("\n차단으로 인해 수집을 중단했습니다. 정상 완료가 아닙니다.")
+        else:
+            print("\n수집 완료!")
 
     except Exception as e:
         if connection and connection.is_connected():

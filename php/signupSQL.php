@@ -47,7 +47,7 @@
 			writeLog("회원가입 - user(" .$login_id. ")회원가입 성공");
 			echo "<script>
 				alert('회원가입이 완료되었습니다.');
-				location.href='/animeInfo/login.php'; 
+				location.href='/Frontend/login.html'; 
 			</script>"; //경로 파일 이름 따라서 꼭! 바꾸기 (animeInfo부분)
 		}
 		else
@@ -55,7 +55,7 @@
 			writeLog("회원가입 - 비밀번호 입력 이후 회원가입 실패");
 			echo "<script>
 				alert('회원가입에 실패했습니다. 아이디를 확인해주세요.');
-				location.href='/animeInfo/signup.php';
+				location.href='/Frontend/signup.html';
 			</script>"; //경로 파일 이름 따라서 꼭! 바꾸기 (animeInfo부분)
 		}
 	}

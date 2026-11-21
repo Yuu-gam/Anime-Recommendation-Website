@@ -92,44 +92,49 @@
                 <div class="col-lg-6">
                     <div class="login__form">
                         <h3>회원가입</h3>
-                        <!-- [BACKEND] action 경로를 실제 회원가입 처리 PHP 파일명(예: signup_process.php)으로 연결 -->
-                        <form id="signup-form" action="../php/signupSQL.php" method="POST">
-                            <!-- 1. 아이디 + 중복 확인 -->
-                            <div class="d-flex justify-content-between align-items-center" style="max-width: 370px; margin-bottom: 6px;">
-                                <div class="input__item" style="width: calc(100% - 115px); margin-bottom: 0;">
-                                    <input type="text" id="login_id" name="login_id" placeholder="아이디" required>
-                                    <span class="icon_id"></span>
+
+                            <form id="signup-form" action="../php/signup.php" method="POST">
+                                <!-- 1. 아이디 + 중복 확인 -->
+                                <div class="d-flex justify-content-between align-items-center" style="max-width: 370px; margin-bottom: 6px;">
+                                    <div class="input__item" style="width: calc(100% - 115px); margin-bottom: 0;">
+                                        <input type="text" id="login_id" name="login_id" placeholder="아이디" required>
+                                        <span class="icon_id"></span>
+                                    </div>
+                                    <button type="submit" name="check_id" value="1" id="check-id-btn" class="site-btn" style="width: 105px; height: 50px; padding: 0; font-size: 13px;">중복 확인</button>
                                 </div>
-                                <button type="button" id="check-id-btn" class="site-btn" style="width: 105px; height: 50px; padding: 0; font-size: 13px;">중복 확인</button>
-                            </div>
-                            <small id="id-check-msg" style="display: block; max-width: 370px; margin-bottom: 16px; color: #b7b7b7;">
-                                * 아이디 입력 후 중복 확인을 눌러주세요.
-                            </small>
+                                <small id="id-check-msg" style="display: block; max-width: 370px; margin-bottom: 16px; color: #b7b7b7;">
+                                    * 아이디 입력 후 중복 확인을 눌러주세요.
+                                </small>
+                             </form>
+                            
+                            <!-- [BACKEND] action 경로를 실제 회원가입 처리 PHP 파일명(예: signup_process.php)으로 연결 -->
+                            <form id="signup-form" action="../php/signupSQL.php" method="POST">
+                                
 
-                            <!-- 2. 이름(닉네임) -> 나이로 변경했습니다. -->
-                            <div class="input__item">
-                                <input type="text" id="age" name="age" placeholder="나이" required>
-                                <span class="icon_profile"></span>
-                            </div>
+                                <!-- 2. 이름(닉네임) -> 나이로 변경했습니다. -->
+                                <div class="input__item">
+                                    <input type="text" id="age" name="age" placeholder="나이" required>
+                                    <span class="icon_profile"></span>
+                                </div>
 
-                            <!-- 3. 비밀번호 -->
-                            <div class="input__item">
-                                <input type="password" id="password" name="password" placeholder="비밀번호" required>
-                                <span class="icon_lock"></span>
-                            </div>
+                                <!-- 3. 비밀번호 -->
+                                <div class="input__item">
+                                    <input type="password" id="password" name="password" placeholder="비밀번호" required>
+                                    <span class="icon_lock"></span>
+                                </div>
 
-                            <!-- 4. 비밀번호 확인 (2회 입력) -->
-                            <div class="input__item" style="margin-bottom: 6px;">
-                                <input type="password" id="password_check" name="password_check" placeholder="비밀번호 확인" required>
-                                <span class="icon_lock"></span>
-                            </div>
-                            <small id="pw-match-msg" style="display: block; max-width: 370px; margin-bottom: 20px; color: #b7b7b7;">
-                                * 비밀번호를 한 번 더 입력하세요.
-                            </small>
+                                <!-- 4. 비밀번호 확인 (2회 입력) -->
+                                <div class="input__item" style="margin-bottom: 6px;">
+                                    <input type="password" id="password_check" name="password_check" placeholder="비밀번호 확인" required>
+                                    <span class="icon_lock"></span>
+                                </div>
+                                <small id="pw-match-msg" style="display: block; max-width: 370px; margin-bottom: 20px; color: #b7b7b7;">
+                                    * 비밀번호를 한 번 더 입력하세요.
+                                </small>
 
-                            <button type="submit" class="site-btn">회원가입 완료</button>
-                        </form>
-                        <h5>이미 계정이 있으신가요? <a href="./login.html">로그인!</a></h5>
+                                <button type="submit" class="site-btn">회원가입 완료</button>
+                            </form>
+                            <h5>이미 계정이 있으신가요? <a href="./login.html">로그인!</a></h5>
                     </div>
                 </div>
             </div>
