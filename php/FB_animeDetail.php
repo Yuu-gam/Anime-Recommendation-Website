@@ -26,7 +26,7 @@
         if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] == "") {
             echo "<script>
                 alert('로그인을 해주세요!');
-                location.href = './login.php';
+                location.href = '../Frontend/login.html';
             </script>";
             exit;
         }
@@ -432,9 +432,18 @@
                             <p>아직 추천할 작품이 없습니다.</p>
                         <?php else: ?>
                             <?php foreach ($recommendList as $recommend): ?>
-                                <div
-                                    class="product__sidebar__view__item set-bg"
-                                    data-setbg="<?= h($recommend['anime_image']) ?>">
+                                <?php
+                                $recommendImg = trim((string)($recommend['anime_image'] ?? ''));
+                                if ($recommendImg === '') {
+                                    $recommendImg = '../Frontend/img/trending/trend-1.jpg';
+                                } elseif (
+                                    !preg_match('#^(https?://|/)#i', $recommendImg)
+                                    && !str_starts_with($recommendImg, '../Frontend/')
+                                ) {
+                                    $recommendImg = '../Frontend/' . ltrim($recommendImg, './');
+                                }?>
+                                <div class="product__sidebar__view__item set-bg"
+                                    data-setbg="<?= h($recommendImg) ?>">
                                     <h5>
                                         <a href="./FB_animeDetail.php?anime_id=<?= (int)$recommend['anime_id'] ?>">
                                             <?= h($recommend['anime_name']) ?>
