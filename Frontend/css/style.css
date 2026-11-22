@@ -407,6 +407,16 @@ ol {
 	display: none;
 }
 
+.slicknav_nav .slicknav_arrow {
+	display: inline-block;
+	font-size: 14px;
+	line-height: 1;
+	vertical-align: middle;
+	transform: none;
+	font-family: Arial, sans-serif;
+	font-weight: normal;
+}
+
 /*---------------------
   Hero
 -----------------------*/

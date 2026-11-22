@@ -98,25 +98,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check_id'])) {
                     <div class="header__nav">
                         <nav class="header__menu mobile-menu">
                             <ul>
-                                <li><a href="./FB_main.php">홈</a></li>
-                                <li><a href="../Frontend/categories.html">카테고리(장르)</a></li>
-                                <li><a href="./FB_searchSQL.php">검색</a></li>
-                                <li><a href="./FB_favorites.php">즐겨찾기</a></li>
                                 <li class="active">
-                                    <a href="../Frontend/login.html">로그인 / 마이페이지 <span class="arrow_carrot-down"></span></a>
-                                    <ul class="dropdown">
-                                        <li><a href="../Frontend/login.html">로그인</a></li>
-                                        <li><a href="./FB_signup.php">회원가입</a></li>
-                                    </ul>
+                                    <a href="./FB_main.php">홈</a>
                                 </li>
+                                <li>
+                                    <a href="./FB_searchSQL.php">검색</a>
+                                </li>
+                                <?php if (!empty($_SESSION['user_id'])): ?>
+                                    <li>
+                                        <a href="./FB_favorites.php">
+                                            <?= h($_SESSION['login_id'] ?? '사용자') ?> 님
+                                        </a>
+                                        <ul class="dropdown">
+                                            <li><a href="./FB_favorites.php">마이페이지</a></li>
+                                            <li><a href="./logout.php">로그아웃</a></li>
+                                        </ul>
+                                    </li>
+                                <?php else: ?>
+                                    <li>
+                                        <a href="../Frontend/login.html">
+                                            로그인 / 마이페이지
+                                            <span class="arrow_carrot-down"></span>
+                                        </a>
+                                        <ul class="dropdown">
+                                            <li><a href="../Frontend/login.html">로그인</a></li>
+                                            <li><a href="./FB_signup.php">회원가입</a></li>
+                                        </ul>
+                                    </li>
+                                <?php endif; ?>
                             </ul>
                         </nav>
                     </div>
                 </div>
                 <div class="col-lg-2">
                     <div class="header__right">
-                        <a href="#" class="search-switch" title="빠른 검색"><span class="icon_search"></span></a>
-                        <a href="../Frontend/login.html" title="로그인 / 마이페이지"><span class="icon_profile"></span></a>
+                        <a href="#" class="search-switch" title="빠른 검색">
+                            <span class="icon_search"></span>
+                        </a>
+                        <?php if (!empty($_SESSION['user_id'])): ?>
+                            <a href="./FB_favorites.php" title="마이페이지">
+                                <span class="icon_profile"></span>
+                            </a>
+                        <?php else: ?>
+                            <a href="../Frontend/login.html" title="로그인">
+                                <span class="icon_profile"></span>
+                            </a>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
