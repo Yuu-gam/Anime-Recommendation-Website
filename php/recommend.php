@@ -10,8 +10,8 @@
 
     //사용자 시청 목록(평점)에 따라 작품 추천
     function getRecommendationsByTypeAndSeries($conn, $user_id) {
-        //사용자가 평점을 남긴 작품들의 유형(anime_type)과 시리즈(seires_id) 조회
-        $prefQuery = "SELECT DISTINCT a.anime_type, a.seires_id 
+        //사용자가 평점을 남긴 작품들의 유형(anime_type)과 시리즈(series_id) 조회
+        $prefQuery = "SELECT DISTINCT a.anime_type, a.series_id 
                     FROM History h 
                     JOIN Animes a ON h.anime_id = a.anime_id 
                     WHERE h.user_id = ? AND h.rating IS NOT NULL";
@@ -27,8 +27,8 @@
             if (!empty($row['anime_type']) && !in_array($row['anime_type'], $types)) {
                 $types[] = $row['anime_type'];
             }
-            if (!empty($row['seires_id']) && !in_array($row['seires_id'], $seriesIds)) {
-                $seriesIds[] = $row['seires_id'];
+            if (!empty($row['series_id']) && !in_array($row['series_id'], $seriesIds)) {
+                $seriesIds[] = $row['series_id'];
             }
         }
         mysqli_stmt_close($stmt);
@@ -57,7 +57,7 @@
         // 시리즈(IN) 조건 추가
         if (!empty($seriesIds)) {
             $seriesPlaceholders = implode(',', array_fill(0, count($seriesIds), '?'));
-            $whereClauses[] = "seires_id IN ($seriesPlaceholders)";
+            $whereClauses[] = "series_id IN ($seriesPlaceholders)";
             foreach ($seriesIds as $s) {
                 $params[] = $s;
                 $paramTypes .= 'i';
@@ -115,17 +115,17 @@
 
         // 같은 나잇대 유저들이 즐겨찾기한 작품 중 내가 아직 즐겨찾기하지 않은 작품 무작위 추천
         $query = "SELECT DISTINCT a.* 
-                FROM favorites f
+                FROM Favorites f
                 JOIN Users u ON f.user_id = u.user_id
                 JOIN Animes a ON f.anime_id = a.anime_id
                 WHERE u.age BETWEEN ? AND ? 
                 AND f.user_id != ?
-                AND f.anime_id NOT IN (SELECT anime_id FROM favorites WHERE user_id = ?)
+                AND f.anime_id NOT IN (SELECT anime_id FROM Favorites WHERE user_id = ?)
                 ORDER BY RAND() LIMIT 5";
 
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, "iiii", $minAge, $maxAge, $user_id, $user_id);
-        mysqli_stmt_execute($stmt, $queryRes);
+        mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
         mysqli_stmt_close($stmt);
 

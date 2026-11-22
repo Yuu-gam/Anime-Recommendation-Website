@@ -134,6 +134,48 @@
         mysqli_stmt_close($favStmt);
     }
 
+    // 추천 목록 조회
+    $recommendList = [];
+
+    if (!empty($_SESSION['user_id'])) {
+        require_once(__DIR__ . '/recommend.php');
+
+        $userId = (int)$_SESSION['user_id'];
+
+        // 1. 사용자 평점 기반 추천
+        $ratingResult = getRecommendationsByTypeAndSeries(
+            $conn,
+            $userId
+        );
+        if ($ratingResult) {
+            while ($row = mysqli_fetch_assoc($ratingResult)) {
+                $recommendList[$row['anime_id']] = $row;
+            }
+        }
+
+        // 2. 같은 연령대 사용자의 즐겨찾기 기반 추천
+        $ageResult = getRecommendationsByAgeGroup(
+            $conn,
+            $userId
+        );
+        if ($ageResult) {
+            while ($row = mysqli_fetch_assoc($ageResult)) {
+                $recommendList[$row['anime_id']] = $row;
+            }
+        }
+
+        // 현재 보고 있는 작품은 추천에서 제외
+        unset($recommendList[$animeId]);
+
+        // 최대 5개 출력
+        $recommendList = array_slice(
+            $recommendList,
+            0,
+            5,
+            true
+        );
+    }
+
     mysqli_close($conn);
 ?>
 
@@ -243,7 +285,6 @@
                         <a href="./FB_main.php">
                             <i class="fa fa-home"></i> 홈
                         </a>
-                        <a href="../Frontend/categories.html">카테고리(장르)</a>
                         <span>작품 상세</span>
                     </div>
                 </div>
@@ -254,7 +295,6 @@
     <!-- Anime Details -->
     <section class="anime-details spad">
         <div class="container">
-
             <div class="anime__details__content">
                 <div class="row">
 
@@ -330,13 +370,10 @@
 
                             <!-- Favorite Button -->
                             <div class="anime__details__btn">
-
                                 <form method="POST"
                                     action="FB_animeDetail.php?anime_id=<?php echo (int)$animeId; ?>"
                                     style="display:inline-block;">
-
                                     <input type="hidden" name="action" value="toggle_favorite">
-
                                     <button type="submit" class="follow-btn">
                                         <?php if ($isFavorite): ?>
                                             <i class="fa fa-star"></i> 즐겨찾기 해제
@@ -345,12 +382,10 @@
                                         <?php endif; ?>
                                     </button>
                                 </form>
-
                                 <a href="./FB_favorites.php" class="watch-btn">
                                     <span>즐겨찾기 목록</span>
                                     <i class="fa fa-angle-right"></i>
                                 </a>
-
                             </div>
                         </div>
                     </div>
@@ -360,109 +395,97 @@
             <!-- Rating Form -->
             <div class="row">
                 <div class="col-lg-8 col-md-8">
-
                     <div class="anime__details__form">
                         <div class="section-title">
                             <h5>작품 평점 등록</h5>
                         </div>
-
-                        <form method="POST"
-                            action="FB_animeDetail.php?anime_id=<?php echo (int)$animeId; ?>">
-
+                        <form method="POST" action="FB_animeDetail.php?anime_id=<?php echo (int)$animeId; ?>">
                             <input type="hidden" name="action" value="update_rating">
                             <div class="rating-picker" id="ratingPicker">
                                 <?php for ($i = 1; $i <= 5; $i++): ?>
                                     <span class="rating-pick-item">
                                         <i class="fa fa-star-o" data-index="<?= $i ?>"></i>
 
-                                        <button type="button" class="rating-hit left"
-                                                data-value="<?= $i - 0.5 ?>"></button>
-
-                                        <button type="button"
-                                                class="rating-hit right"
-                                                data-value="<?= $i ?>"></button>
+                                        <button type="button" class="rating-hit left" data-value="<?= $i - 0.5 ?>"></button>
+                                        <button type="button" class="rating-hit right" data-value="<?= $i ?>"></button>
                                     </span>
                                 <?php endfor; ?>
                             </div>
-
                             <input type="hidden"
                                    name="rating"
                                    id="ratingValue"
-                                   value="<?= h($currentRating ?? 0) ?>">
-                            
+                                   value="<?= h($currentRating ?? 0) ?>">                           
                             <button type="submit">평점 등록</button>
                         </form>
                     </div>
-
                 </div>
 
-                <!-- Sidebar -->
+                <!-- Sidebar: 추천 작품 -->
                 <div class="col-lg-4 col-md-4">
                     <div class="anime__details__sidebar">
                         <div class="section-title">
-                            <h5>즐겨찾기</h5>
+                            <h5>비슷한 추천 작품</h5>
                         </div>
-
-                        <p>
-                            마음에 드는 작품을 즐겨찾기에 추가하고
-                            즐겨찾기 목록에서 확인할 수 있습니다.
-                        </p>
-
-                        <a href="./FB_favorites.php" class="watch-btn">
-                            <span>즐겨찾기 목록 보기</span>
-                            <i class="fa fa-angle-right"></i>
-                        </a>
+                        <?php if (empty($_SESSION['user_id'])): ?>
+                            <p>로그인하면 맞춤 작품을 추천받을 수 있습니다.</p>
+                        <?php elseif (empty($recommendList)): ?>
+                            <p>아직 추천할 작품이 없습니다.</p>
+                        <?php else: ?>
+                            <?php foreach ($recommendList as $recommend): ?>
+                                <div
+                                    class="product__sidebar__view__item set-bg"
+                                    data-setbg="<?= h($recommend['anime_image']) ?>">
+                                    <h5>
+                                        <a href="./FB_animeDetail.php?anime_id=<?= (int)$recommend['anime_id'] ?>">
+                                            <?= h($recommend['anime_name']) ?>
+                                        </a>
+                                    </h5>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- Footer Section Begin -->
     <footer class="footer">
         <div class="page-up">
-            <a href="#" id="scrollToTopButton">
-                <span class="arrow_carrot-up"></span>
-            </a>
+            <a href="#" id="scrollToTopButton"><span class="arrow_carrot-up"></span></a>
         </div>
-
         <div class="container">
             <div class="row">
-
                 <div class="col-lg-3">
                     <div class="footer__logo">
-                        <a href="./FB_main.php">
-                            <img src="../Frontend/img/logo.png" alt="Logo">
-                        </a>
+                        <a href="./FB_main.php"><img src="../Frontend/img/logo.png" alt="Logo"></a>
                     </div>
                 </div>
-
                 <div class="col-lg-6">
                     <div class="footer__nav">
                         <ul>
                             <li><a href="./FB_main.php">홈</a></li>
-                            <li><a href="../Frontend/categories.html">카테고리(장르)</a></li>
                             <li><a href="./FB_searchSQL.php">검색</a></li>
-                            <li><a href="./FB_favorites.php">즐겨찾기</a></li>
-                            <li><a href="../Frontend/login.html">로그인 / 마이페이지</a></li>
+                            <li>
+                                <?php if (!empty($_SESSION['user_id'])): ?>
+                                    <a href="./FB_favorites.php">마이페이지</a>
+                                <?php else: ?>
+                                    <a href="../Frontend/login.html">로그인</a>
+                                <?php endif; ?>
+                            </li>
                         </ul>
                     </div>
                 </div>
-
                 <div class="col-lg-3">
                     <p>
                         Copyright &copy;
-                        <script>
-                            document.write(new Date().getFullYear());
-                        </script>
-                        All rights reserved
+                        <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://ahmedmaher-portfolio.vercel.app/" target="_blank">Ahmed Maher</a>
                     </p>
                 </div>
-
             </div>
         </div>
     </footer>
+    <!-- Footer Section End -->
 
     <!-- Search Model -->
     <div class="search-model">

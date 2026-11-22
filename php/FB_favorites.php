@@ -50,67 +50,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     
     // 평점 등록 및 수정
-    if ($action === 'update_rating' && $animeId > 0) {
-        $rating = (int)($_POST['rating'] ?? 0);
-        $rating = max(0, min(10, $rating));
+    if ($action === 'update_rating') {
+
+        $rating = (float)($_POST['rating'] ?? 0);
+        $rating = max(0, min(5, $rating));
+        $rating = round($rating * 2) / 2;
 
         // 기존 History 기록 확인
         $checkStmt = mysqli_prepare(
             $conn,
-            "SELECT history_id
+            "SELECT history_id, status
              FROM History
              WHERE user_id = ? AND anime_id = ?"
         );
-
-        if (!$checkStmt) {
-            die("평점 기록 확인에 실패했습니다.");
-        }
-
         mysqli_stmt_bind_param($checkStmt, "ii", $userId, $animeId);
         mysqli_stmt_execute($checkStmt);
 
         $checkResult = mysqli_stmt_get_result($checkStmt);
-        $history = mysqli_fetch_assoc($checkResult);
 
-        mysqli_stmt_close($checkStmt);
-
-        if ($history) {
-            // 기존 기록이 있으면 UPDATE
-            $ratingStmt = mysqli_prepare(
+        if ($row = mysqli_fetch_assoc($checkResult)) {
+            // 기존 기록이 있으면 평점 UPDATE
+            $upStmt = mysqli_prepare(
                 $conn,
-                "UPDATE History SET rating = ?
-                 WHERE history_id = ?"
+                "UPDATE History SET rating = ? WHERE history_id = ?"
             );
 
             mysqli_stmt_bind_param(
-                $ratingStmt,
+                $upStmt,
                 "di",
                 $rating,
-                $history['history_id']
+                $row['history_id']
             );
+
+            mysqli_stmt_execute($upStmt);
+            mysqli_stmt_close($upStmt);
+
         } else {
+
             // 기존 기록이 없으면 INSERT
-            $ratingStmt = mysqli_prepare(
+            $insStmt = mysqli_prepare(
                 $conn,
-                "INSERT INTO History (user_id, anime_id, rating)
-                 VALUES (?, ?, ?)"
+                "INSERT INTO History (user_id, anime_id, rating, status)
+                 VALUES (?, ?, ?, 1)"
             );
 
             mysqli_stmt_bind_param(
-                $ratingStmt,
+                $insStmt,
                 "iid",
                 $userId,
                 $animeId,
                 $rating
             );
+
+            mysqli_stmt_execute($insStmt);
+            mysqli_stmt_close($insStmt);
         }
 
-        if ($ratingStmt) {
-            mysqli_stmt_execute($ratingStmt);
-            mysqli_stmt_close($ratingStmt);
-        }
+        mysqli_stmt_close($checkStmt);
 
-        header("Location: ./FB_favorites.php");
+        header("Location: FB_favorites.php");
         exit;
     }
 }
@@ -201,7 +199,7 @@ function h($value) {
     <meta name="keywords" content="Anime, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Anime | 내 즐겨찾기</title>
+    <title>Anime | 마이페이지</title>
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -344,7 +342,7 @@ function h($value) {
                 <div class="col-lg-12">
                     <div class="breadcrumb__links">
                         <a href="./FB_main.php"><i class="fa fa-home"></i> 홈</a>
-                        <span>즐겨찾기</span>
+                        <span>마이페이지</span>
                     </div>
                 </div>
             </div>
@@ -400,12 +398,12 @@ function h($value) {
                                                 </ul>
 
                                                 <h5>
-                                                    <a href="./anime_detail.php?anime_id=<?php echo (int)$anime['anime_id']; ?>">
+                                                    <a href="./FB_animeDetail.php?anime_id=<?php echo (int)$anime['anime_id']; ?>">
                                                         <?php echo h($anime['anime_name']); ?>
                                                     </a>
                                                 </h5>
 
-                                                <?php $currentRating = isset($anime['my_rating']) ? (int)$anime['my_rating'] : 0; ?>
+                                                <?php $currentRating = isset($anime['my_rating']) ? (float)$anime['my_rating'] : 0; ?>
 
                                                 <div style="margin-top: 12px; color: #b7b7b7;">
                                                     <form method="POST" action="./FB_favorites.php">
@@ -422,16 +420,24 @@ function h($value) {
                                                             </strong>
                                                         </label>
 
-                                                        <input
-                                                            type="range"
-                                                            name="rating"
-                                                            min="0"
-                                                            max="10"
-                                                            step="1"
-                                                            value="<?php echo $currentRating; ?>"
-                                                            style="width: 100%; cursor: pointer;"
-                                                            oninput="document.getElementById('rating-value-<?php echo (int)$anime['anime_id']; ?>').textContent = this.value"
-                                                        >
+                                                        <div class="rating-picker" id="ratingPicker-<?php echo (int)$anime['anime_id']; ?>">
+                                                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                                                <span class="rating-pick-item">
+                                                                    <i class="fa fa-star-o"
+                                                                       data-index="<?= $i ?>"></i>
+                                                                    <button type="button"
+                                                                            class="rating-hit left"
+                                                                            data-value="<?= $i - 0.5 ?>"></button>
+                                                                    <button type="button"
+                                                                            class="rating-hit right"
+                                                                            data-value="<?= $i ?>"></button>
+                                                                </span>
+                                                            <?php endfor; ?>
+                                                        </div>
+                                                        <input type="hidden"
+                                                               name="rating"
+                                                               id="ratingValue-<?php echo (int)$anime['anime_id']; ?>"
+                                                               value="<?= h($currentRating) ?>">
 
                                                         <button type="submit" class="site-btn"
                                                                 style="margin-top: 8px; padding: 6px 14px; font-size: 12px;">
@@ -473,10 +479,14 @@ function h($value) {
                     <div class="footer__nav">
                         <ul>
                             <li><a href="./FB_main.php">홈</a></li>
-                            <li><a href="../Frontend/categories.html">카테고리(장르)</a></li>
                             <li><a href="./FB_searchSQL.php">검색</a></li>
-                            <li><a href="./FB_favorites.php">즐겨찾기</a></li>
-                            <li><a href="../Frontend/login.html">로그인 / 마이페이지</a></li>
+                            <li>
+                                <?php if (!empty($_SESSION['user_id'])): ?>
+                                    <a href="./FB_favorites.php">마이페이지</a>
+                                <?php else: ?>
+                                    <a href="../Frontend/login.html">로그인</a>
+                                <?php endif; ?>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -510,7 +520,62 @@ function h($value) {
     <script src="../Frontend/js/owl.carousel.min.js"></script>
     <script src="../Frontend/js/main.js"></script>
 
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
 
+    document.querySelectorAll('.rating-picker').forEach(function (picker) {
+
+        const animeId = picker.id.replace('ratingPicker-', '');
+        const ratingInput = document.getElementById('ratingValue-' + animeId);
+
+        if (!ratingInput) return;
+
+        const stars = picker.querySelectorAll('[data-index]');
+        const buttons = picker.querySelectorAll('.rating-hit');
+
+        function updateRating(value) {
+            value = Math.max(0, Math.min(5, value));
+            value = Math.round(value * 2) / 2;
+
+            ratingInput.value = value.toFixed(1);
+
+            const ratingText = document.getElementById('rating-value-' + animeId);
+
+            if (ratingText) {
+                ratingText.textContent = value;
+            }
+
+            stars.forEach(function (star) {
+                const index = Number(star.dataset.index);
+
+                star.classList.remove(
+                    'fa-star',
+                    'fa-star-half-o',
+                    'fa-star-o'
+                );
+
+                if (value >= index) {
+                    star.classList.add('fa-star');
+                } else if (value >= index - 0.5) {
+                    star.classList.add('fa-star-half-o');
+                } else {
+                    star.classList.add('fa-star-o');
+                }
+            });
+        }
+
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                updateRating(Number(this.dataset.value));
+            });
+        });
+
+        updateRating(Number(ratingInput.value) || 0);
+    });
+
+});
+    </script>
 </body>
 
 </html>

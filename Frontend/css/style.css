@@ -1214,7 +1214,7 @@ ol {
 	color: #e89f12;
 }
 
-.anime__details__form form .rating-picker .rating-hit {
+.rating-picker .rating-hit {
 	position: absolute;
 	top: 0;
 	bottom: 0;

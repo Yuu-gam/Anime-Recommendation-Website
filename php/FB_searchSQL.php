@@ -636,10 +636,14 @@
                     <div class="footer__nav">
                         <ul>
                             <li><a href="./FB_main.php">홈</a></li>
-                            <li><a href="../Frontend/categories.html">카테고리(장르)</a></li>
-                            <li><a href="./searchResult.php">검색</a></li>
-                            <li><a href="./FB_favorites.php">즐겨찾기</a></li>
-                            <li><a href="../Frontend/login.html">로그인 / 마이페이지</a></li>
+                            <li><a href="./FB_searchSQL.php">검색</a></li>
+                            <li>
+                                <?php if (!empty($_SESSION['user_id'])): ?>
+                                    <a href="./FB_favorites.php">마이페이지</a>
+                                <?php else: ?>
+                                    <a href="../Frontend/login.html">로그인</a>
+                                <?php endif; ?>
+                            </li>
                         </ul>
                     </div>
                 </div>
