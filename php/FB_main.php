@@ -254,8 +254,13 @@
                                     <div class="col-lg-4 col-md-6 col-sm-6">
                                         <div class="product__item">
 
-                                            <div class="product__item__pic set-bg"
-                                                data-setbg="<?php echo h($anime['anime_image']); ?>">
+                                            <div class="product__item__pic">
+                                                <img
+                                                    class="anime-result-image"
+                                                    src="<?= h($anime['anime_image'] ?? '') ?>"
+                                                    referrerpolicy="no-referrer"
+                                                    alt="<?= h($anime['anime_name']) ?>"
+                                                >
 
                                                 <div class="ep">
                                                     평점 <?php echo number_format((float)$anime['average_rating'], 1); ?>
