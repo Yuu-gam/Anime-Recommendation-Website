@@ -357,6 +357,16 @@
                         </div>
                     </div>
     <!-- Search model end -->
+    <!-- Search model Begin (빠른 재검색 가능) -->
+    <div class="search-model">
+        <div class="h-100 d-flex align-items-center justify-content-center">
+            <div class="search-close-switch"><i class="icon_close"></i></div>
+            <form action="./FB_searchSQL.php" method="GET" class="search-model-form">
+                <input type="text" name="anime_name" id="modal_anime_name" placeholder="작품 제목을 입력하세요..." autocomplete="off">
+            </form>
+        </div>
+    </div>
+    <!-- Search model end -->
     <!-- Js Plugins -->
     <script src="../Frontend/js/jquery-3.3.1.min.js"></script>
     <script src="../Frontend/js/bootstrap.min.js"></script>

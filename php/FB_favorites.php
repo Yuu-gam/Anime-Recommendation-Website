@@ -24,6 +24,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] == "") {
 }
 
 $userId = (int)$_SESSION['user_id'];
+$login_id = $_SESSION['login_id'];
 
 
 // 즐겨찾기 해제 및 평점 수정 처리
@@ -108,7 +109,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         mysqli_stmt_close($checkStmt);
 
-        header("Location: FB_favorites.php");
+        //로그 작성
+        writeLog("마이페이지 평점 수정 - user(" . $login_id . ") anime_id(" . $animeId . ") 평점: " . $rating);
+          
+        echo "<script>alert('평점이 저장되었습니다.'); location.href='./FB_favorites.php';</script>";
         exit;
     }
 }

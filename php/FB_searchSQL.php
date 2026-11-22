@@ -73,6 +73,16 @@
     $resultCount = $result ? mysqli_num_rows($result) : 0;
 
     $hasDetailFilter = !empty($validTypes) || ($year !== '' && ctype_digit($year)) || ($quarter !== '' && ctype_digit($quarter));
+
+    $searchDetails = sprintf( //로그 용 출력 내용 함수
+            "검색어: [%s], 유형: [%s], 년도: [%s], 분기: [%s] | 결과 건수: %d건",
+            $name !== '' ? $name : '전체',
+            !empty($validTypes) ? implode(', ', $validTypes) : '전체',
+            $year !== '' ? $year : '전체',
+            $quarter !== '' ? $quarter : '전체',
+            mysqli_num_rows($result)
+        );
+    writeLog("검색- user(" . $login_id . ") " . $searchDetails);
 ?>
 <!DOCTYPE html>
 <html lang="ko">
@@ -405,7 +415,7 @@
 
                         <!-- AniDB 스타일 기본 + 상세 검색 영역 Begin -->
                         <div class="anidb-search-box">
-                            <form id="detail-search-form" action="./searchResult.php" method="GET">
+                            <form id="detail-search-form" action="./FB_searchSQL.php" method="GET">
                                 <!-- 1. 기본 제목 검색줄 -->
                                 <div class="anidb-search-bar">
                                     <input type="text" id="detail_anime_name" name="anime_name" value="<?= h($name) ?>" placeholder="작품 제목 또는 키워드를 입력하세요..." autocomplete="off">
@@ -662,7 +672,7 @@
     <div class="search-model">
         <div class="h-100 d-flex align-items-center justify-content-center">
             <div class="search-close-switch"><i class="icon_close"></i></div>
-            <form action="./searchResult.php" method="GET" class="search-model-form">
+            <form action="./FB_searchSQL.php" method="GET" class="search-model-form">
                 <input type="text" name="anime_name" id="modal_anime_name" placeholder="작품 제목을 입력하세요..." autocomplete="off">
             </form>
         </div>
