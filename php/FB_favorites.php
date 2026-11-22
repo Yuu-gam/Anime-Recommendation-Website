@@ -445,7 +445,7 @@ function h($value) {
 
                                                         <button type="submit" class="site-btn"
                                                                 style="margin-top: 8px; padding: 6px 14px; font-size: 12px;">
-                                                            평점 저장
+                                                            평점 수정
                                                         </button>
                                                     </form>
                                                 </div>

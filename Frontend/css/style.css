@@ -941,6 +941,21 @@ ol {
 	font-size: 15px;
 }
 
+.product__pagination .pagination-dots {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 50px;
+	height: 50px;
+	color: #b7b7b7;
+	font-size: 22px;
+	font-weight: 700;
+	letter-spacing: 2px;
+	opacity: 1;
+	vertical-align: middle;
+	padding-bottom: 10px;
+}
+
 /*---------------------
   Anime Details
 -----------------------*/

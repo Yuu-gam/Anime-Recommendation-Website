@@ -57,22 +57,71 @@
         $paramTypes .= 'i';
     }
 
-    // 최종 쿼리 조립
+
+    // 페이지네이션 설정
+    $itemsPerPage = 9;
+    $currentPage = max(1, (int)($_GET['page'] ?? 1));
+    
+
+    // 전체 검색 결과 수 계산
+    $countQuery = "SELECT COUNT(*) AS total FROM Animes";
+
+    if (!empty($where)) {
+        $countQuery .= " WHERE " . implode(' AND ', $where);
+    }
+
+    $countStmt = mysqli_prepare($conn, $countQuery);
+
+    if (!empty($params)) {
+        mysqli_stmt_bind_param($countStmt, $paramTypes, ...$params);
+    }
+
+    mysqli_stmt_execute($countStmt);
+    $countResult = mysqli_stmt_get_result($countStmt);
+
+    $totalItems = (int)mysqli_fetch_assoc($countResult)['total'];
+    $totalPages = max(1, (int)ceil($totalItems / $itemsPerPage));
+
+    mysqli_stmt_close($countStmt);
+
+    // 현재 페이지 보정
+    $currentPage = min($currentPage, $totalPages);
+    $offset = ($currentPage - 1) * $itemsPerPage;
+
+
+    // 실제 작품 목록 조회
     $query = "SELECT anime_id, anime_name, anime_image, anime_type, release_year, anime_quarter FROM Animes";
+
     if (!empty($where)) {
         $query .= " WHERE " . implode(' AND ', $where);
     }
-    $query .= " ORDER BY anime_name";
 
-    $stmt = mysqli_prepare($conn, $query) or die("검색문을 준비하지 못했습니다: " . h(mysqli_error($conn)));
-    if (!empty($params)) {
-        mysqli_stmt_bind_param($stmt, $paramTypes, ...$params);
-    }
+    $query .= " ORDER BY anime_name LIMIT ? OFFSET ?";
+
+    $stmt = mysqli_prepare($conn, $query);
+
+    $paginationTypes = $paramTypes . 'ii';
+    $paginationParams = array_merge($params, [$itemsPerPage, $offset]);
+
+    mysqli_stmt_bind_param($stmt, $paginationTypes, ...$paginationParams);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     $resultCount = $result ? mysqli_num_rows($result) : 0;
-
     $hasDetailFilter = !empty($validTypes) || ($year !== '' && ctype_digit($year)) || ($quarter !== '' && ctype_digit($quarter));
+
+
+
+    // 우측 사이드바: 최신 등록 작품 5개
+    $recentQuery = "
+        SELECT anime_id, anime_name, anime_image, anime_type, release_year
+        FROM Animes
+        ORDER BY anime_id DESC
+        LIMIT 5
+    ";
+
+    $recentResult = mysqli_query($conn, $recentQuery)
+    or die('최신 등록 작품을 불러오지 못했습니다.');
+
 
     $searchDetails = sprintf( //로그 용 출력 내용 함수
             "검색어: [%s], 유형: [%s], 년도: [%s], 분기: [%s] | 결과 건수: %d건",
@@ -437,11 +486,11 @@
                                                     <label class="filter-group-label">작품 유형</label>
                                                     <div class="filter-chip-list">
                                                         <label class="filter-chip">
-                                                            <input type="checkbox" name="anime_type[]" value="Movie" <?= in_array('Movie', $validTypes, true) ? 'checked' : '' ?>>
+                                                            <input type="checkbox" name="anime_type[]" value="TV Series" <?= in_array('TV Series', $validTypes, true) ? 'checked' : '' ?>>
                                                             <span>TV Series</span>
                                                         </label>
                                                         <label class="filter-chip">
-                                                            <input type="checkbox" name="anime_type[]" value="TV" <?= in_array('TV', $validTypes, true) ? 'checked' : '' ?>>
+                                                            <input type="checkbox" name="anime_type[]" value="TV Special" <?= in_array('TV Special', $validTypes, true) ? 'checked' : '' ?>>
                                                             <span>TV Special</span>
                                                         </label>
                                                         <label class="filter-chip">
@@ -449,7 +498,7 @@
                                                             <span>Movie</span>
                                                         </label>
                                                         <label class="filter-chip">
-                                                            <input type="checkbox" name="anime_type[]" value="Movie" <?= in_array('Movie', $validTypes, true) ? 'checked' : '' ?>>
+                                                            <input type="checkbox" name="anime_type[]" value="OVA" <?= in_array('OVA', $validTypes, true) ? 'checked' : '' ?>>
                                                             <span>OVA</span>
                                                         </label>
                                                     </div>
@@ -511,7 +560,7 @@
                                     <div class="section-title">
                                         <h4>
                                             검색 결과: "<span id="search-term" style="color: #e53637;"><?= $name !== '' ? h($name) : '전체' ?></span>"
-                                            <span style="font-size: 14px; color: #b7b7b7; margin-left: 8px;">(<?= $resultCount ?>개)</span>
+                                            <span style="font-size: 14px; color: #b7b7b7; margin-left: 8px;">(<?= $totalItems ?>개)</span>
                                         </h4>
                                     </div>
                                     <div id="active-filter-summary" class="active-filter-summary">
@@ -547,7 +596,7 @@
                                         $imgSrc = '../Frontend/' . ltrim($rawImg, './');
                                     }
 
-                                    $detailUrl = './FB_animeDetail.php?id=' . urlencode((string)$anime['anime_id']);
+                                    $detailUrl = './FB_animeDetail.php?anime_id=' . urlencode((string)$anime['anime_id']);
                                 ?>
                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                     <div class="product__item">
@@ -581,47 +630,115 @@
 
                     <!-- 페이지네이션 -->
                     <div class="product__pagination">
-                        <a href="#" class="current-page">1</a>
-                        <a href="#">2</a>
-                        <a href="#"><i class="fa fa-angle-double-right"></i></a>
+
+                        <?php if ($currentPage > 1): ?>
+                            <a href="?<?= h(http_build_query(array_merge($_GET, ['page' => $currentPage - 1]))) ?>">
+                                <i class="fa fa-angle-double-left"></i>
+                            </a>
+                        <?php endif; ?>
+
+                        <?php
+                        $pages = [];
+
+                        // 첫 페이지
+                        $pages[] = 1;
+
+                        // 현재 페이지 주변
+                        for ($i = $currentPage - 3; $i <= $currentPage + 3; $i++) {
+                            if ($i > 1 && $i < $totalPages) {
+                                $pages[] = $i;
+                            }
+                        }
+
+                        // 마지막 페이지
+                        if ($totalPages > 1) {
+                            $pages[] = $totalPages;
+                        }
+
+                        $pages = array_unique($pages);
+                        sort($pages);
+
+                        $previousPage = 0;
+
+                        foreach ($pages as $page):
+                            if ($previousPage > 0 && $page - $previousPage > 1):?>
+                                <span class="pagination-dots">...</span>
+                        <?php
+                            endif;?>
+
+                            <a href="?<?= h(http_build_query(array_merge($_GET, ['page' => $page]))) ?>"
+                               class="<?= $page === $currentPage ? 'current-page' : '' ?>">
+                                <?= $page ?>
+                            </a>
+
+                        <?php
+                            $previousPage = $page;
+                        endforeach;
+                        ?>
+
+                        <?php if ($currentPage < $totalPages): ?>
+                            <a href="?<?= h(http_build_query(array_merge($_GET, ['page' => $currentPage + 1]))) ?>">
+                                <i class="fa fa-angle-double-right"></i>
+                            </a>
+                        <?php endif; ?>
+
                     </div>
                 </div>
 
-                <!-- 우측 사이드바 -->
+                
+                <!-- 우측 사이드바: 최신 등록 작품 -->
                 <div class="col-lg-4 col-md-6 col-sm-8">
                     <div class="product__sidebar">
                         <div class="product__sidebar__view">
+
                             <div class="section-title">
-                                <h5>조회수 TOP</h5>
+                                <h5>최신 등록 작품</h5>
                             </div>
-                            <ul class="filter__controls">
-                                <li class="active" data-filter="*">전체</li>
-                                <li data-filter=".week">주간</li>
-                                <li data-filter=".month">월간</li>
-                                <li data-filter=".years">연간</li>
-                            </ul>
+
                             <div class="filter__gallery">
-                                <div class="product__sidebar__view__item set-bg mix day years" data-setbg="../Frontend/img/sidebar/tv-1.jpg">
-                                    <div class="ep">방영중</div>
-                                    <div class="view"><i class="fa fa-eye"></i> 9,141</div>
-                                    <h5><a href="./FB_animeDetail.php?id=16">보루토: 나루토 넥스트 제너레이션즈</a></h5>
-                                </div>
-                                <div class="product__sidebar__view__item set-bg mix month week" data-setbg="../Frontend/img/sidebar/tv-2.jpg">
-                                    <div class="ep">24 / 24</div>
-                                    <div class="view"><i class="fa fa-eye"></i> 12,300</div>
-                                    <h5><a href="./FB_animeDetail.php?id=1">일곱 개의 대죄: 신들의 역린</a></h5>
-                                </div>
-                                <div class="product__sidebar__view__item set-bg mix week years" data-setbg="../Frontend/img/sidebar/tv-3.jpg">
-                                    <div class="ep">23 / 23</div>
-                                    <div class="view"><i class="fa fa-eye"></i> 15,780</div>
-                                    <h5><a href="./FB_animeDetail.php?id=17">소드 아트 온라인 앨리시제이션 WoU</a></h5>
-                                </div>
-                                <div class="product__sidebar__view__item set-bg mix years month" data-setbg="../Frontend/img/sidebar/tv-4.jpg">
-                                    <div class="ep">극장판</div>
-                                    <div class="view"><i class="fa fa-eye"></i> 18,410</div>
-                                    <h5><a href="./FB_animeDetail.php?id=18">Fate/stay night [Heaven's Feel] I</a></h5>
-                                </div>
+                                <?php if (mysqli_num_rows($recentResult) === 0): ?>
+                                    <p style="color: #b7b7b7;">
+                                        등록된 작품이 없습니다.
+                                    </p>
+                                <?php else: ?>
+
+                                    <?php while ($recent = mysqli_fetch_assoc($recentResult)): ?>
+
+                                        <?php
+                                            $recentImg = trim((string)($recent['anime_image'] ?? ''));
+
+                                            if ($recentImg === '') {
+                                                $recentImg = '../Frontend/img/trending/trend-1.jpg';
+                                            } elseif (
+                                                !preg_match('#^(https?://|/)#i', $recentImg)
+                                                && !str_starts_with($recentImg, '../Frontend/')
+                                            ) {
+                                                $recentImg = '../Frontend/' . ltrim($recentImg, './');
+                                            }
+                                        ?>
+
+                                        <div class="product__sidebar__view__item set-bg"
+                                            data-setbg="<?= h($recentImg) ?>">
+
+                                            <?php if (!empty($recent['release_year'])): ?>
+                                                <div class="ep">
+                                                    <?= h($recent['release_year']) ?>년
+                                                </div>
+                                            <?php endif; ?>
+
+                                            <h5>
+                                                <a href="./FB_animeDetail.php?anime_id=<?= (int)$recent['anime_id'] ?>">
+                                                    <?= h($recent['anime_name']) ?>
+                                                </a>
+                                            </h5>
+
+                                        </div>
+
+                                    <?php endwhile; ?>
+
+                                <?php endif; ?>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -716,6 +833,11 @@
     if ($result instanceof mysqli_result) {
         mysqli_free_result($result);
     }
+
+    if ($recentResult instanceof mysqli_result) {
+        mysqli_free_result($recentResult);
+    }
+
     mysqli_stmt_close($stmt);
     mysqli_close($conn);
 ?>
