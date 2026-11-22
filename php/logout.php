@@ -9,6 +9,6 @@
 
 	session_destroy();
 
-	header("Location: ./login.php");
+	header("Location: ../Frontend/login.html");
 	exit;
 ?>
