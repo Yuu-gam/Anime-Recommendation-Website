@@ -121,6 +121,7 @@
                 WHERE u.age BETWEEN ? AND ? 
                 AND f.user_id != ?
                 AND f.anime_id NOT IN (SELECT anime_id FROM Favorites WHERE user_id = ?)
+                AND a.adult = 0
                 ORDER BY RAND() LIMIT 5";
 
         $stmt = mysqli_prepare($conn, $query);

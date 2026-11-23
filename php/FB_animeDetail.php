@@ -149,7 +149,9 @@
         );
         if ($ratingResult) {
             while ($row = mysqli_fetch_assoc($ratingResult)) {
-                $recommendList[$row['anime_id']] = $row;
+                if ((int)$row['adult'] === 0) {
+                    $recommendList[$row['anime_id']] = $row;
+                }
             }
         }
 
@@ -160,7 +162,9 @@
         );
         if ($ageResult) {
             while ($row = mysqli_fetch_assoc($ageResult)) {
-                $recommendList[$row['anime_id']] = $row;
+                if ((int)$row['adult'] === 0) {
+                    $recommendList[$row['anime_id']] = $row;
+                }
             }
         }
 
@@ -442,8 +446,13 @@
                                 ) {
                                     $recommendImg = '../Frontend/' . ltrim($recommendImg, './');
                                 }?>
-                                <div class="product__sidebar__view__item set-bg"
-                                    data-setbg="<?= h($recommendImg) ?>">
+                                <div class="product__sidebar__view__item">
+                                    <img
+                                        class="recommend-anime-image"
+                                        src="<?= h($recommendImg) ?>"
+                                        referrerpolicy="no-referrer"
+                                        alt="<?= h($recommend['anime_name']) ?>"
+                                    >
                                     <h5>
                                         <a href="./FB_animeDetail.php?anime_id=<?= (int)$recommend['anime_id'] ?>">
                                             <?= h($recommend['anime_name']) ?>

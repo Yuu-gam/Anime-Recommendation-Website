@@ -19,6 +19,7 @@
         release_year
     FROM Animes
     WHERE release_year IS NOT NULL
+    AND adult = 0
     ORDER BY release_year DESC, anime_id DESC
     LIMIT 2
     ";
@@ -40,6 +41,7 @@
         FROM Animes a
         LEFT JOIN History h
             ON a.anime_id = h.anime_id
+        WHERE a.adult = 0
         GROUP BY
             a.anime_id,
             a.anime_name,
@@ -62,6 +64,7 @@
         SELECT anime_id, anime_name, anime_image, anime_type,
                release_year, anime_quarter
         FROM Animes
+        WHERE adult = 0
         ORDER BY anime_id DESC
         LIMIT 6
     ";

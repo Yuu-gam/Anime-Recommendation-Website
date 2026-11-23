@@ -19,11 +19,14 @@
     $types = $_GET['anime_type'] ?? [];
     $year = trim((string)($_GET['anime_year'] ?? ''));
     $quarter = trim((string)($_GET['anime_quarter'] ?? ''));
+    $adult = $_GET['adult'] ?? '0';
+    $adult = ($adult === '1') ? '1' : '0';
 
     if (!is_array($types)) {
         $types = [];
     }
     $validTypes = array_values(array_filter($types, fn($t) => is_string($t) && $t !== ''));
+
 
     // 동적 SQL 조건(WHERE) 및 바인딩 파라미터 구성
     $where = [];
@@ -55,6 +58,10 @@
         $where[] = "anime_quarter = ?";
         $params[] = (int)$quarter;
         $paramTypes .= 'i';
+    }
+
+    if ($adult === '0') {
+        $where[] = "adult = 0";
     }
 
 
@@ -90,7 +97,7 @@
 
 
     // 실제 작품 목록 조회
-    $query = "SELECT anime_id, anime_name, anime_image, anime_type, release_year, anime_quarter FROM Animes";
+    $query = "SELECT anime_id, anime_name, anime_image, anime_type, release_year, anime_quarter, adult FROM Animes";
 
     if (!empty($where)) {
         $query .= " WHERE " . implode(' AND ', $where);
@@ -107,7 +114,7 @@
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     $resultCount = $result ? mysqli_num_rows($result) : 0;
-    $hasDetailFilter = !empty($validTypes) || ($year !== '' && ctype_digit($year)) || ($quarter !== '' && ctype_digit($quarter));
+    $hasDetailFilter = !empty($validTypes) || ($year !== '' && ctype_digit($year)) || ($quarter !== '' && ctype_digit($quarter)) || ($adult === '1');
 
 
 
@@ -115,6 +122,7 @@
     $recentQuery = "
         SELECT anime_id, anime_name, anime_image, anime_type, release_year
         FROM Animes
+        WHERE adult = 0
         ORDER BY anime_id DESC
         LIMIT 5
     ";
@@ -124,11 +132,12 @@
 
 
     $searchDetails = sprintf( //로그 용 출력 내용 함수
-            "검색어: [%s], 유형: [%s], 년도: [%s], 분기: [%s] | 결과 건수: %d건",
+            "검색어: [%s], 유형: [%s], 년도: [%s], 분기: [%s], 성인 작품: [%s] | 결과 건수: %d건",
             $name !== '' ? $name : '전체',
             !empty($validTypes) ? implode(', ', $validTypes) : '전체',
             $year !== '' ? $year : '전체',
             $quarter !== '' ? $quarter : '전체',
+            $adult === '1' ? '포함' : '일반 작품만',
             mysqli_num_rows($result)
         );
     writeLog("검색- user(" . $login_id . ") " . $searchDetails);
@@ -528,11 +537,33 @@
                                                         '4' => '4분기',
                                                     ];
                                                     foreach ($quarterOptions as $qVal => $qLabel):
-                                                        $checked = ($quarter === $qVal) ? 'checked' : '';
+                                                        $checked = ($quarter === (string)$qVal) ? 'checked' : '';
                                                     ?>
                                                         <label class="filter-chip">
-                                                            <input type="radio" name="anime_quarter" value="<?= h($qVal) ?>" <?= $checked ?>>
+                                                            <input type="radio" name="anime_quarter" value="<?= h((string)$qVal) ?>" <?= $checked ?>>
                                                             <span><?= h($qLabel) ?></span>
+                                                        </label>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 성인 작품 표시($_GET['adult']) -->
+                                        <div class="col-md-6">
+                                            <div class="filter-group">
+                                                <label class="filter-group-label">성인 작품 표시</label>
+                                                <div class="filter-chip-list">
+                                                    <?php
+                                                    $adultOptions = [
+                                                        '0'  => '일반 작품만 표시',
+                                                        '1'  => '성인 작품 포함',
+                                                    ];
+                                                    foreach ($adultOptions as $aVal => $aLabel):
+                                                        $checked = ($adult === (string)$aVal) ? 'checked' : '';
+                                                    ?>
+                                                        <label class="filter-chip">
+                                                            <input type="radio" name="adult" value="<?= h((string)$aVal) ?>" <?= $checked ?>>
+                                                            <span><?= h($aLabel) ?></span>
                                                         </label>
                                                     <?php endforeach; ?>
                                                 </div>
@@ -573,6 +604,9 @@
                                         <?php if ($quarter !== '' && ctype_digit($quarter)): ?>
                                             <span class="badge-tag">분기: <?= h($quarter) ?>분기</span>
                                         <?php endif; ?>
+                                        <?php if ($adult === '1'): ?> 
+                                            <span class="badge-tag">표시: 성인 작품 포함</span>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
@@ -608,6 +642,9 @@
                                                 alt="<?= h($anime['anime_name']) ?>">
                                             <?php if (!empty($anime['anime_quarter'])): ?>
                                                 <div class="ep"><?= h($anime['anime_quarter']) ?>분기</div>
+                                            <?php endif; ?>
+                                            <?php if ((int)$anime['adult'] === 1): ?>
+                                                <div class="adult-badge">성인</div>
                                             <?php endif; ?>
                                         </div>
                                         <div class="product__item__text">
@@ -823,6 +860,9 @@
 
                 const defaultQuarter = document.querySelector('#advanced-filter-box input[name="anime_quarter"][value=""]');
                 if (defaultQuarter) defaultQuarter.checked = true;
+
+                const defaultAdult = document.querySelector('#advanced-filter-box input[name="adult"][value="0"]');
+                if (defaultAdult) defaultAdult.checked = true;
             });
         })();
     </script>
