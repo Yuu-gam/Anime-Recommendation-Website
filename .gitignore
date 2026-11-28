@@ -9,5 +9,9 @@
 AniDB/data/cache/
 AniDB/data/failed-anime-ids.txt
 
+#Python 캐시
+__pychache__/
+*.pyc
+
 #DB credentials
 php/SQLconstants.php
